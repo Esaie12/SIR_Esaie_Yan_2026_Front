@@ -1,0 +1,150 @@
+<div class="container">
+  <div class="row login-container">
+
+    <!-- Image -->
+    <div class="col-md-6 d-none d-md-block login-image"></div>
+
+    <!-- Formulaire -->
+    <div class="col-md-6 login-form d-flex flex-column justify-content-center">
+
+      <div class="mb-4">
+        <span class="logo">
+          <span class="logo-icon"></span> C.R.M
+        </span>
+      </div>
+
+      <h5 class="mb-4">Inscrivez-vous à votre compte</h5>
+
+      <!-- Question toujours visible -->
+      <div class="mb-4">
+        <p>Êtes-vous une personne physique ?</p>
+        <button
+          class="btn me-2 mt-3"
+          [ngClass]="{'btn-primary': categorieChoisie === 'physique', 'btn-outline-success': categorieChoisie !== 'physique'}"
+          (click)="choisirCategorie('physique')">
+          Oui, Je suis un humain
+        </button>
+        <button
+          class="btn  mt-3"
+          [ngClass]="{'btn-primary': categorieChoisie === 'entreprise', 'btn-outline-success': categorieChoisie !== 'entreprise'}"
+          (click)="choisirCategorie('entreprise')">
+          Non, Je suis une entreprise
+        </button>
+      </div>
+
+      <!-- Formulaire dynamique -->
+      <form *ngIf="categorieChoisie" #formRef="ngForm" (ngSubmit)="submitForm()">
+
+        <!-- Personne physique -->
+        <div *ngIf="categorieChoisie === 'physique'">
+          <div class="mb-3">
+            <input type="text" class="form-control" placeholder="Nom complet"
+                  [(ngModel)]="formPhysique.nom" name="nom" required #nom="ngModel">
+            <div class="text-danger small" *ngIf="nom.invalid && nom.touched">
+              Nom requis
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <input type="date" class="form-control" placeholder="Date de naissance"
+                  [(ngModel)]="formPhysique.dateNaissance" name="dateNaissance" required #dateNaissance="ngModel">
+            <div class="text-danger small" *ngIf="dateNaissance.invalid && dateNaissance.touched">
+              Date de naissance requise
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <input type="text" class="form-control" placeholder="Téléphone"
+                  [(ngModel)]="formPhysique.telephone" name="telephone" required #telephone="ngModel">
+            <div class="text-danger small" *ngIf="telephone.invalid && telephone.touched">
+              Téléphone requis
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <input type="email" class="form-control" placeholder="Email"
+                  [(ngModel)]="formPhysique.email" name="email" required email #email="ngModel">
+            <div class="text-danger small" *ngIf="email.invalid && email.touched">
+              Email valide requis
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <input type="password" class="form-control" placeholder="Mot de passe"
+                  [(ngModel)]="formPhysique.password" name="password" required #password="ngModel">
+            <div class="text-danger small" *ngIf="password.invalid && password.touched">
+              Mot de passe requis
+            </div>
+          </div>
+        </div>
+
+        <!-- Entreprise -->
+        <div *ngIf="categorieChoisie === 'entreprise'">
+          <div class="mb-3">
+            <input type="text" class="form-control" placeholder="Nom de l'entreprise"
+                  [(ngModel)]="formEntreprise.nom" name="nom" required #nomEnt="ngModel">
+            <div class="text-danger small" *ngIf="nomEnt.invalid && nomEnt.touched">
+              Nom requis
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <input type="email" class="form-control" placeholder="Email"
+                  [(ngModel)]="formEntreprise.email" name="email" required email #emailEnt="ngModel">
+            <div class="text-danger small" *ngIf="emailEnt.invalid && emailEnt.touched">
+              Email valide requis
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <input type="text" class="form-control" placeholder="Téléphone"
+                  [(ngModel)]="formEntreprise.telephone" name="telephone" required #telEnt="ngModel">
+            <div class="text-danger small" *ngIf="telEnt.invalid && telEnt.touched">
+              Téléphone requis
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <input type="text" class="form-control" placeholder="Localisation"
+                  [(ngModel)]="formEntreprise.localisation" name="localisation" required #locEnt="ngModel">
+            <div class="text-danger small" *ngIf="locEnt.invalid && locEnt.touched">
+              Localisation requise
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <input type="text" class="form-control" placeholder="SIRET"
+                  [(ngModel)]="formEntreprise.siret" name="siret" required #siretEnt="ngModel">
+            <div class="text-danger small" *ngIf="siretEnt.invalid && siretEnt.touched">
+              SIRET requis
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <input type="password" class="form-control" placeholder="Mot de passe"
+                  [(ngModel)]="formEntreprise.password" name="password" required #passEnt="ngModel">
+            <div class="text-danger small" *ngIf="passEnt.invalid && passEnt.touched">
+              Mot de passe requis
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-black w-100 mb-3" [disabled]="formRef.invalid">
+          Inscription
+        </button>
+
+      </form>
+
+        <div>
+          <span class="small">Vous avez deja un compte? </span>
+          <a routerLink="/login" class="text-decoration-none">Connectez-vous ici</a>
+        </div>
+
+      <div class="mt-4 small text-muted">
+        <marquee behavior="" direction="">TP SIR - Esaïe Yan - 2026</marquee>
+      </div>
+
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,45 @@
+body {
+      background-color: #f2f2f2;
+    }
+
+    .login-container {
+      max-width: 1000px;
+      margin: 50px auto;
+      border-radius: 20px;
+      overflow: hidden;
+      background: white;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .login-image {
+      background: url('https://images.unsplash.com/photo-1524504388940-b1c1722653e1') center/cover no-repeat;
+      min-height: 500px;
+    }
+
+    .login-form {
+      padding: 40px;
+    }
+
+    .btn-black {
+      background-color: black;
+      color: white;
+    }
+
+    .btn-black:hover {
+      background-color: #333;
+      color: white;
+    }
+
+    .logo {
+      font-weight: bold;
+      font-size: 24px;
+    }
+
+    .logo-icon {
+      color: orange;
+      margin-right: 8px;
+    }
+
+    a {
+      text-decoration: none;
+    }

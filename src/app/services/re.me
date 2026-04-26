@@ -1,0 +1,20 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+import { BaseService } from './base.service';
+import { Category } from '../models/category.model';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class CategoryService extends BaseService<Category> {
+
+  constructor(protected http: HttpClient) {
+    super(http, environment.apiUrl + '/categories');
+  }
+
+  // Tu peux ajouter des méthodes spécifiques à Category si nécessaire
+  getActiveCategories() {
+    return this.http.get<Category[]>(`${this.apiUrl}?active=true`);
+  }
+}

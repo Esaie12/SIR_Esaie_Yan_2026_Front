@@ -1,0 +1,75 @@
+<div class="container">
+  <div class="row login-container">
+
+    <!-- Image -->
+    <div class="col-md-6 d-none d-md-block login-image"></div>
+
+    <!-- Formulaire -->
+    <div class="col-md-6 login-form d-flex flex-column justify-content-center">
+
+      <div class="mb-4">
+        <span class="logo">
+          <span class="logo-icon"></span> C.R.M
+        </span>
+      </div>
+
+      <h5 class="mb-4">Connectez-vous à votre compte</h5>
+
+      <form #loginForm="ngForm" (ngSubmit)="seConnecter()" novalidate>
+
+      <div class="mb-3">
+        <input
+          type="email"
+          class="form-control"
+          [(ngModel)]="data.userEmail"
+          name="email"
+          #email="ngModel"
+          required
+          email
+          placeholder="Email address">
+
+        <!-- Message erreur -->
+        <div class="text-danger small" *ngIf="email.invalid && email.touched">
+          Email invalide
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <input
+          type="password"
+          class="form-control"
+          [(ngModel)]="data.userPassword"
+          name="password"
+          #password="ngModel"
+          required
+          minlength="6"
+          placeholder="********">
+
+        <!-- Message erreur -->
+        <div class="text-danger small" *ngIf="password.invalid && password.touched">
+          Mot de passe requis (min 6 caractères)
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-black w-100 mb-3"
+        [disabled]="loginForm.invalid">
+        Se connecter
+      </button>
+
+    </form>
+
+        <div>
+          <span class="small">Vous n'avez pas encore de compte? </span>
+          <a routerLink="/register" class="text-decoration-none">Inscrivez-vous ici</a>
+        </div>
+
+      <div class="mt-4 small text-muted">
+        <marquee behavior="" direction="">TP SIR - Esaïe Yan - 2026</marquee>
+      </div>
+
+    </div>
+
+  </div>
+</div>

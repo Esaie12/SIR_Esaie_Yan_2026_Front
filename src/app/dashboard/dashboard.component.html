@@ -1,0 +1,60 @@
+<div class="container mt-4">
+<h4 class="mb-4">📊 Tableau de bord</h4>
+
+  <!-- STATS -->
+  <div class="row g-4" *ngIf="stats$ | async as stats">
+
+    <!-- CATEGORIES -->
+    <div class="col-md-3">
+      <div class="card p-3 text-center">
+        <div class="stat-icon">📁</div>
+        <h5 class="mt-2">Catégories</h5>
+        <h3>{{ nombreGroupes }}</h3>
+      </div>
+    </div>
+
+    <!-- MESSAGES -->
+    <div class="col-md-3">
+      <div class="card p-3 text-center">
+        <div class="stat-icon">💬</div>
+        <h5 class="mt-2">Messages</h5>
+        <h3>{{ nombreMessagesEnvoyes }}</h3>
+      </div>
+    </div>
+
+    <!-- ABONNEMENTS -->
+    <div class="col-md-3">
+      <div class="card p-3 text-center">
+        <div class="stat-icon">👥</div>
+        <h5 class="mt-2">Clients</h5>
+        <h3>{{ nombreClients }}</h3>
+      </div>
+    </div>
+
+    <!-- NOTIFICATIONS -->
+    <div class="col-md-3">
+      <div class="card p-3 text-center">
+        <div class="stat-icon">🔔</div>
+        <h5 class="mt-2">Notifications</h5>
+        <h3>{{ nombreNotifications }}</h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-12 text-center">
+      <!-- ACTIONS RAPIDES -->
+      <div class="card mt-4 p-3">
+        <h5>⚡ Actions rapides</h5>
+
+        <div class="d-flex justify-content-center gap-3 mt-3">
+          <routerLink class="btn btn-primary" [routerLink]="['/messages']">Créer message</routerLink>
+          <routerLink class="btn btn-outline-primary" [routerLink]="['/category']">Voir catégories</routerLink>
+          <routerLink class="btn btn-warning" [routerLink]="['/clients']">Voir mes clients</routerLink>
+
+          <button class="btn btn-success">Envoyer notification</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
