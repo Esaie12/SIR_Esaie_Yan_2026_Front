@@ -12,7 +12,7 @@ body {
     }
 
     .login-image {
-      background: url('https://images.unsplash.com/photo-1524504388940-b1c1722653e1') center/cover no-repeat;
+      background: url('assets/images/login2.png') center/cover no-repeat;
       min-height: 500px;
     }
 
