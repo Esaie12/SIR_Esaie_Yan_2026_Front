@@ -111,7 +111,7 @@ export class MessageFormComponent{
       return;
     }*/
 
-    this.groupes$ =  this.categoryService.getAll().pipe( // this.categoryService.getUserCategories().pipe(
+    this.groupes$ =  this.categoryService.getUserCategories(this.user?.id).pipe( // this.categoryService.getUserCategories().pipe(
       tap((res: any) => {
         this.groupesList = res.data; // ✅ stock local
         console.log('GROUPES:', this.groupesList);
