@@ -1,27 +1,30 @@
 <div class="container mt-4">
-<h4 class="mb-4">📊 Tableau de bord</h4>
+  <div class="text-end mb-3">
+    <button class="btn btn-dark"
+            (click)="generateDemoData()">
+      ⚡ Générer des données de démonstration
+    </button>
+  </div>
 
-<div class="text-end mb-3">
-  <button class="btn btn-dark"
-          (click)="generateDemoData()">
-    ⚡ Générer des données de démonstration
-  </button>
-</div>
+  <h4 class="mb-4">📊 Tableau de bord</h4>
 
-<div class="alert alert-info">
-  👋 Bonjour <strong>{{ user?.firstname }}</strong>,
-  vous êtes connecté en tant que
-  <strong>{{ user?.type === 'MORAL' ? 'Entreprise' : 'Particulier' }}</strong>.
-</div>
 
   <!-- STATS -->
   <div class="row g-4" *ngIf="stats$ | async as stats">
 
+    <div class="col-lg-12">
+      <div class="alert alert-info">
+      👋 Bonjour <strong>{{ user?.firstname }}</strong>,
+      vous êtes connecté en tant que
+      <strong>{{ user?.type === 'MORAL' ? 'Entreprise' : 'Particulier' }}</strong>.
+    </div>
+
+    </div>
     <!-- CATEGORIES -->
     <div class="col-md-3">
       <div class="card p-3 text-center">
         <div class="stat-icon">📁</div>
-        <h5 class="mt-2">Catégories</h5>
+        <h5 class="mt-2">Groupes</h5>
         <h3>{{ nombreGroupes }}</h3>
       </div>
     </div>
