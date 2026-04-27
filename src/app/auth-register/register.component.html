@@ -140,9 +140,22 @@
           <a routerLink="/login" class="text-decoration-none">Connectez-vous ici</a>
         </div>
 
-      <div class="mt-4 small text-muted">
+        <div class="mt-4 small text-muted mb-3">
         <marquee behavior="" direction="">TP SIR - Esaïe Yan - 2026</marquee>
       </div>
+
+
+        <button type="button"
+                class="btn btn-outline-warning w-100 mb-3"
+                (click)="generateFakeRegister()">
+          Inscription aléatoire
+        </button>
+
+        <p class="text-muted small mt-2 text-center">
+          Si vous êtes en train de tester l'application, n'hésitez pas à utiliser le bouton d'inscription aléatoire pour créer un compte de démonstration rapidement.
+        ⚠️ N’oubliez pas de cliquer sur <b>Inscription</b>.
+      </p>
+
 
     </div>
 

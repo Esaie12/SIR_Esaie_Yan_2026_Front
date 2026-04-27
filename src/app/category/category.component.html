@@ -48,9 +48,12 @@
 </div>
 
 <!-- 🔷 MODAL CREATION -->
+<!-- 🔷 MODAL CREATION -->
 <div class="modal fade" id="categoryModal">
   <div class="modal-dialog modal-dialog-centered">
-    <form #groupeForm="ngForm" (ngSubmit)="onSubmit(groupeForm)" class="modal-content">
+    <form #groupeForm="ngForm"
+          (ngSubmit)="onSubmit(groupeForm)"
+          class="modal-content">
 
       <!-- HEADER -->
       <div class="modal-header">
@@ -66,7 +69,7 @@
           class="form-control mb-2"
           placeholder="Titre"
           name="libelle"
-          ngModel
+          [(ngModel)]="groupeData.libelle"
           required
           minlength="3"
           #libelle="ngModel">
@@ -76,60 +79,48 @@
           <span *ngIf="libelle.errors?.['minlength']">Minimum 3 caractères</span>
         </div>
 
-        <!-- DESCRIPTION -->
-        <!--textarea
-          class="form-control mb-2"
-          placeholder="Description"
-          name="description"
-          ngModel>
-        </textarea-->
-
-        <!-- TYPE -->
-        <!--select
-          class="form-select"
-          name="type"
-          ngModel
-          required
-          #type="ngModel">
-
-          <option value="">Type de groupe</option>
-          <option value="user">User</option>
-          <option value="message">Message</option>
-        </select>
-
-        <div class="text-danger" *ngIf="type.invalid && type.touched">
-          <span *ngIf="type.errors?.['required']">Le type est requis</span>
-        </div-->
-
         <!-- COLOR -->
         <input
           type="color"
           name="color"
-          ngModel
+          [(ngModel)]="groupeData.color"
+          required
           #color="ngModel"
           class="form-control form-control-color mt-2">
 
         <div class="text-danger" *ngIf="color.invalid && color.touched">
-          <span *ngIf="color.errors?.['required']">La couleur est requise</span>
+          <span>La couleur est requise</span>
+        </div>
+
+        <div class="">
+          <i>Apres avoir généré les données du groupe, n'oubliez pas de cliquer sur valider la création</i>
         </div>
 
       </div>
 
       <!-- FOOTER -->
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-          Annuler ou Fermer
+      <div class="modal-footer d-flex flex-wrap gap-2">
+
+        <button type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal">
+          Fermer
         </button>
 
-        <button
-          type="submit"
-          class="btn btn-primary"
-          [disabled]="groupeForm.invalid">
-          Créer
+        <button type="submit"
+                class="btn btn-primary"
+                [disabled]="groupeForm.invalid">
+          Valider la création
         </button>
+
+        <button type="button"
+                class="btn btn-outline-warning"
+                (click)="generateFakeGroupe()">
+          Générer un groupe
+        </button>
+
       </div>
 
     </form>
   </div>
 </div>
-

@@ -68,7 +68,7 @@ export class AuthService {
     return localStorage.getItem('authToken');
   }
 
-  getUser(): InscriptionPhysique | InscriptionEntreprise | null {
+  getUser(): InscriptionPhysique | InscriptionEntreprise | null | any {
     const userString = localStorage.getItem('user');
     if (!userString) return null;
 

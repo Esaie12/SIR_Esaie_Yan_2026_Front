@@ -1,0 +1,147 @@
+<div class="container mb-5">
+
+  <!-- Breadcrumb -->
+  <nav class="mt-3">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a routerLink="/messages">Retour à la liste</a>
+      </li>
+      <li class="breadcrumb-item active">Modifier un message</li>
+    </ol>
+  </nav>
+
+  <div class="card p-4">
+    <h4 class="mb-4">Modifier le message</h4>
+
+    <form #messageForm="ngForm" (ngSubmit)="submit()" class="row">
+
+      <!-- TITRE -->
+      <div class="mb-3 col-12">
+        <label class="form-label">Titre ou objet du message</label>
+        <input type="text"
+               class="form-control"
+               name="title"
+               [(ngModel)]="form.title"
+               #title="ngModel"
+               required>
+
+        <div *ngIf="title.invalid && title.touched" class="text-danger small">
+          Le titre est requis
+        </div>
+      </div>
+
+      <!-- TYPE DESTINATAIRE -->
+      <div class="mb-3 col-12">
+        <label class="form-label d-block">Type de destinataire</label>
+
+        <input type="radio"
+               id="userRadio"
+               name="typeDestinataire"
+               value="user"
+               [(ngModel)]="form.typeDestinataire">
+
+        <label for="userRadio" class="me-4">Utilisateur simple</label>
+
+        <input type="radio"
+               id="groupRadio"
+               name="typeDestinataire"
+               value="group"
+               [(ngModel)]="form.typeDestinataire">
+
+        <label for="groupRadio">Groupe d'utilisateurs</label>
+      </div>
+
+      <!-- UTILISATEUR -->
+      <div class="mb-3 col-lg-6" *ngIf="form.typeDestinataire === 'user'">
+        <label class="form-label">Utilisateur</label>
+
+        <select class="form-select"
+                name="userId"
+                [(ngModel)]="form.userId"
+                #userId="ngModel"
+                required>
+
+          <option [ngValue]="null">-- Sélectionner --</option>
+
+          <option *ngFor="let u of customersList" [ngValue]="u.id">
+            {{ u.name }}
+          </option>
+
+        </select>
+
+        <div *ngIf="userId.invalid && userId.touched" class="text-danger small">
+          Veuillez sélectionner un utilisateur
+        </div>
+      </div>
+
+      <!-- GROUPE -->
+      <div class="mb-3 col-lg-6" *ngIf="form.typeDestinataire === 'group'">
+        <label class="form-label">Groupe</label>
+
+        <select class="form-select"
+                name="groupeId"
+                [(ngModel)]="form.groupeId"
+                #group="ngModel"
+                required>
+
+          <option [ngValue]="null">-- Sélectionner un groupe --</option>
+
+          <option *ngFor="let g of groupesList" [ngValue]="g.id">
+            {{ g.libelle }}
+          </option>
+
+        </select>
+
+        <div *ngIf="group.invalid && group.touched" class="text-danger small">
+          Veuillez sélectionner un groupe
+        </div>
+      </div>
+
+      <!-- DATE -->
+      <div class="mb-3 col-lg-6">
+        <label class="form-label">Date d'envoi</label>
+
+        <input type="datetime-local"
+               class="form-control"
+               name="dateSend"
+               [(ngModel)]="form.dateSend"
+               #dateSend="ngModel"
+               required>
+
+        <div *ngIf="dateSend.invalid && dateSend.touched" class="text-danger small">
+          La date est requise
+        </div>
+      </div>
+
+      <!-- CONTENU -->
+      <div class="mb-3 col-lg-12">
+        <label class="form-label">Contenu</label>
+
+        <textarea class="form-control"
+                  name="content"
+                  rows="10"
+                  [(ngModel)]="form.content"
+                  #content="ngModel"
+                  required></textarea>
+
+        <div *ngIf="content.invalid && content.touched" class="text-danger small">
+          Le contenu est requis
+        </div>
+      </div>
+
+      <!-- ACTIONS -->
+      <div class="d-flex justify-content-end gap-2">
+        <a routerLink="/messages" class="btn btn-secondary">
+          Annuler
+        </a>
+
+        <button type="submit"
+                class="btn btn-primary"
+                [disabled]="messageForm.invalid">
+          Modifier
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>

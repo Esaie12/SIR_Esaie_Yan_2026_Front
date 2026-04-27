@@ -1,6 +1,19 @@
 <div class="container mt-4">
 <h4 class="mb-4">📊 Tableau de bord</h4>
 
+<div class="text-end mb-3">
+  <button class="btn btn-dark"
+          (click)="generateDemoData()">
+    ⚡ Générer des données de démonstration
+  </button>
+</div>
+
+<div class="alert alert-info">
+  👋 Bonjour <strong>{{ user?.firstname }}</strong>,
+  vous êtes connecté en tant que
+  <strong>{{ user?.type === 'MORAL' ? 'Entreprise' : 'Particulier' }}</strong>.
+</div>
+
   <!-- STATS -->
   <div class="row g-4" *ngIf="stats$ | async as stats">
 
@@ -48,11 +61,10 @@
         <h5>⚡ Actions rapides</h5>
 
         <div class="d-flex justify-content-center gap-3 mt-3">
-          <routerLink class="btn btn-primary" [routerLink]="['/messages']">Créer message</routerLink>
-          <routerLink class="btn btn-outline-primary" [routerLink]="['/category']">Voir catégories</routerLink>
+          <routerLink class="btn btn-primary" [routerLink]="['/messages']">Voir mes messages</routerLink>
+          <routerLink class="btn btn-outline-primary" [routerLink]="['/category']">Voir mes groupes</routerLink>
           <routerLink class="btn btn-warning" [routerLink]="['/clients']">Voir mes clients</routerLink>
-
-          <button class="btn btn-success">Envoyer notification</button>
+          <routerLink class="btn btn-success" [routerLink]="['/messages-create']">Envoyer un nouveau message</routerLink>
         </div>
       </div>
     </div>

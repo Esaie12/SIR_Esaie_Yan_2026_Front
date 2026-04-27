@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { finalize, first, last } from 'rxjs';
+import { faker } from '@faker-js/faker';
 
 @Component({
   selector: 'app-register',
@@ -76,6 +77,18 @@ export class RegisterComponent {
         )
     .subscribe({
       next: () => {
+
+        // 🔥 Sauvegarde pour mode démo
+        const fakeAccounts = JSON.parse(localStorage.getItem('fake_accounts') || '[]');
+
+        fakeAccounts.push({
+          email: data.email,
+          password: data.password,
+          type: data.type
+        });
+
+        localStorage.setItem('fake_accounts', JSON.stringify(fakeAccounts));
+
         this.router.navigate(['/login']);
       },
       error: (err) => {
@@ -84,6 +97,41 @@ export class RegisterComponent {
       }
     });
 
+  }
+
+
+  generateFakeRegister() {
+
+    const isPhysique = Math.random() > 0.5;
+
+    this.categorieChoisie = isPhysique ? 'physique' : 'entreprise';
+
+    const password = '12345678';
+
+    if (isPhysique) {
+
+      this.formPhysique = {
+        nom: faker.person.fullName(),
+        dateNaissance: faker.date.birthdate().toISOString().split('T')[0],
+        telephone: faker.phone.number(),
+        email: faker.internet.email(),
+        password
+      };
+
+    } else {
+
+      this.formEntreprise = {
+        nom: faker.company.name(),
+        email: faker.internet.email(),
+        telephone: faker.phone.number(),
+        localisation: faker.location.city(),
+        siret: faker.number.int({ min: 10000000000000, max: 99999999999999 }).toString(),
+        password
+      };
+
+    }
+
+    console.log('Inscription fake générée ✔️');
   }
 
 }

@@ -54,4 +54,31 @@ export class LoginComponent {
   }
 
 
+  loginRandomAccount() {
+
+    let accounts = JSON.parse(localStorage.getItem('fake_accounts') || '[]');
+
+    // 🔥 SI AUCUN COMPTE → on en crée un
+    if (!accounts.length) {
+
+      const newAccount = {
+        email: `test${Math.floor(Math.random() * 10000)}@demo.com`,
+        password: '12345678'
+      };
+
+      accounts.push(newAccount);
+
+      localStorage.setItem('fake_accounts', JSON.stringify(accounts));
+
+      console.log('Compte auto-créé :', newAccount);
+    }
+
+    // 🔥 choisir un compte
+    const random = accounts[Math.floor(Math.random() * accounts.length)];
+
+    // remplir formulaire
+    this.data.userEmail = random.email;
+    this.data.userPassword = random.password;
+  }
+
 }

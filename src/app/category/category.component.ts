@@ -6,6 +6,7 @@ import { Groupe } from '../models/category.model';
 import { catchError, map, Observable, tap, throwError } from 'rxjs';
 import { CategoryService } from '../services/category.service';
 import { AuthService } from '../services/auth.service';
+import { faker } from '@faker-js/faker';
 
 @Component({
   selector: 'app-category',
@@ -80,6 +81,18 @@ export class CategoryComponent {
         return throwError(() => err);
       })
     );
+  }
+
+
+  groupeData: any = {};
+
+  generateFakeGroupe() {
+    this.groupeData = {
+      libelle: faker.commerce.department() + ' ' + faker.number.int(1000),
+      color: faker.color.rgb()
+    };
+
+    console.log('Groupe généré :', this.groupeData);
   }
 
 }

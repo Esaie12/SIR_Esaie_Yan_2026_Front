@@ -2,8 +2,8 @@ export interface Message {
   id?: number;
   title: string;
   content?: string;
-  userId?: number;
-  groupeId?:number,
-  senderId:number,
+ userId: number | null;
+  groupeId: number | null;
+  senderId:number | null,
   dateSend: string; // ISO 8601 format
 }

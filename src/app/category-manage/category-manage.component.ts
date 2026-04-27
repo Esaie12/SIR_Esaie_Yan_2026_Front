@@ -29,6 +29,7 @@ export class CategoryManageComponent {
 
   categoryId = Number(this.route.snapshot.paramMap.get('id'));
   groupe$!: Observable<Groupe>;
+  groupeData: any = {};
 
 
   // ✅ IDs sélectionnés (checkbox)
@@ -54,7 +55,10 @@ export class CategoryManageComponent {
     this.categoryId = id;
 
     this.groupe$ = this.categoryService.getById(id).pipe(
-      map((res: any) => res.data),
+      map((res: any) => {
+        this.groupeData = res.data; // ✅ copie locale pour edit
+        return res.data;
+      }),
       catchError(() => {
         this.router.navigate(['/category']);
         return EMPTY;
@@ -90,9 +94,23 @@ export class CategoryManageComponent {
 
   }
 
-  // 💾 Enregistrer la catégorie
-  saveCategorie() {
-    //console.log('Catégorie sauvegardée', this.categorie);
+  updateGroup() {
+
+    const payload = {
+      libelle: this.groupeData.libelle,
+      color: this.groupeData.color
+    };
+
+    this.categoryService.update(this.categoryId, payload).subscribe({
+      next: () => {
+        console.log('Groupe mis à jour',payload);
+        // refresh UI
+        this.groupe$ = this.categoryService.getById(this.categoryId).pipe(
+          map((res: any) => res.data)
+        );
+      },
+      error: err => console.error(err)
+    });
   }
 
   // ❌ Retirer un membre

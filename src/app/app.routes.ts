@@ -10,6 +10,8 @@ import { CategoryManageComponent } from './category-manage/category-manage.compo
 import { MessageFormComponent } from './message-create/message-form.component';
 import { LoginComponent } from './auth-login/login.component';
 import { RegisterComponent } from './auth-register/register.component';
+import { MesClientsEditComponent } from './mes-clients-edit/mes-clients-edit.component';
+import { MessageEditComponent } from './message-edit/message-edit.component';
 
 export const routes: Routes = [
   {
@@ -20,13 +22,16 @@ export const routes: Routes = [
       {path: 'dashboard', component: DashboardComponent },
       { path: 'category', component: CategoryComponent },
       { path: 'category/:id/manage', component: CategoryManageComponent },
+
       //Les messages
       { path: 'messages', component: MessageComponent },
       {path: 'messages-create', component: MessageFormComponent },
+      {path: 'messages/edit/:id',component: MessageEditComponent},
 
       //Mes clients
       {path: 'clients', component: MesClientsComponent },
-      {path: 'clients-create', component: MesClientsCreateComponent }
+      {path: 'clients-create', component: MesClientsCreateComponent },
+      {path: 'clients/edit/:id', component: MesClientsEditComponent }
     ]
   },
 

@@ -1,32 +1,26 @@
 <div class="row">
   <div class="col-md-8 offset-md-2 mt-5">
-    <div class="card shadow">
+    <div class="card">
       <div class="card-body">
 
-        <!-- HEADER -->
         <h5 class="card-title">
-          <div class="d-flex justify-content-between align-items-center">
-            <span class="text-primary">Créer un nouveau client</span>
-            <a class="btn btn-secondary btn-sm" routerLink="/clients">
-              Retour à la liste
-            </a>
+          <div class="d-flex justify-content-between">
+            <span class="text-primary">Modifier le client</span>
+            <a class="btn btn-secondary btn-sm" routerLink="/clients">Retour à la liste</a>
           </div>
         </h5>
 
-        <!-- FORM -->
-        <form class="row mt-4" #clientForm="ngForm" (ngSubmit)="onSubmit(clientForm)">
+        <form class="row mt-5" #clientForm="ngForm" (ngSubmit)="onSubmit(clientForm)">
 
           <!-- NOM -->
           <div class="mb-3 col-md-6">
-            <label for="clientName" class="form-label">Nom du client</label>
+            <label class="form-label">Nom du client</label>
             <input type="text"
                    class="form-control"
-                   id="clientName"
                    name="name"
                    [(ngModel)]="clientData.name"
                    required minlength="3"
-                   #name="ngModel"
-                   placeholder="Entrez le nom du client">
+                   #name="ngModel">
 
             <div class="text-danger" *ngIf="name.invalid && name.touched">
               <small *ngIf="name.errors?.['required']">Le nom est requis</small>
@@ -36,63 +30,54 @@
 
           <!-- EMAIL -->
           <div class="mb-3 col-md-6">
-            <label for="clientEmail" class="form-label">Email</label>
+            <label class="form-label">Email</label>
             <input type="email"
                    class="form-control"
-                   id="clientEmail"
                    name="email"
                    [(ngModel)]="clientData.email"
                    required email
-                   #email="ngModel"
-                   placeholder="Entrez l'email du client">
+                   #email="ngModel">
 
             <div class="text-danger" *ngIf="email.invalid && email.touched">
               <small *ngIf="email.errors?.['required']">L'email est requis</small>
-              <small *ngIf="email.errors?.['email']">Format d'email invalide</small>
+              <small *ngIf="email.errors?.['email']">Format invalide</small>
             </div>
           </div>
 
           <!-- TELEPHONE -->
           <div class="mb-3 col-md-6">
-            <label for="clientPhone" class="form-label">Téléphone</label>
+            <label class="form-label">Téléphone</label>
             <input type="tel"
                    class="form-control"
-                   id="clientPhone"
                    name="phone"
                    [(ngModel)]="clientData.phone"
-                   #phone="ngModel"
-                   placeholder="Entrez le numéro de téléphone du client">
+                   #phone="ngModel">
           </div>
 
           <!-- LOCALISATION -->
           <div class="mb-3 col-md-6">
-            <label for="clientLocalisation" class="form-label">Localisation</label>
+            <label class="form-label">Localisation</label>
             <input type="text"
                    class="form-control"
-                   id="clientLocalisation"
                    name="localisation"
                    [(ngModel)]="clientData.localisation"
-                   #localisation="ngModel"
-                   placeholder="Entrez la localisation du client">
+                   #localisation="ngModel">
           </div>
 
           <!-- PAYS -->
           <div class="mb-3 col-md-6">
-            <label for="clientCountry" class="form-label">Pays</label>
+            <label class="form-label">Pays</label>
             <input type="text"
                    class="form-control"
-                   id="clientCountry"
                    name="country"
                    [(ngModel)]="clientData.country"
-                   #country="ngModel"
-                   placeholder="Entrez le pays du client">
+                   #country="ngModel">
           </div>
 
           <!-- SEXE -->
           <div class="mb-3 col-md-6">
-            <label for="clientSex" class="form-label">Sexe</label>
-            <select id="clientSex"
-                    name="sexe"
+            <label class="form-label">Sexe</label>
+            <select name="sexe"
                     [(ngModel)]="clientData.sexe"
                     required
                     #sexe="ngModel"
@@ -108,20 +93,12 @@
             </div>
           </div>
 
-          <!-- BOUTONS -->
+          <!-- BOUTON -->
           <div class="col-md-6">
             <button type="submit"
-                    class="btn btn-primary w-100"
+                    class="btn btn-primary"
                     [disabled]="clientForm.invalid">
-              Créer mon client
-            </button>
-          </div>
-
-          <div class="col-md-4 mt-2 mt-md-0">
-            <button type="button"
-                    class="btn btn-warning w-100"
-                    (click)="generateFakeClient()">
-              Générer un client aléatoire
+              Modifier le client
             </button>
           </div>
 

@@ -5,6 +5,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MessageService } from '../services/message.service';
 import { AuthService } from '../services/auth.service';
 import { CustomerService } from '../services/customer.service';
+import { faker } from '@faker-js/faker';
 
 @Component({
   selector: 'app-mes-clients-create',
@@ -21,6 +22,12 @@ export class MesClientsCreateComponent {
   route = inject(ActivatedRoute);
   user? = this.authService.getUser();
   error?: string;
+
+  clientData: any = {};
+
+  ngOnInit() {
+    //this.generateFakeClient();
+  }
 
   onSubmit(form: any) {
 
@@ -46,4 +53,16 @@ export class MesClientsCreateComponent {
 
 
   }
+
+  generateFakeClient() {
+    this.clientData = {
+      name: faker.person.fullName(),
+      email: faker.internet.email(),
+      phone: faker.phone.number(),
+      localisation: faker.location.city(),
+      country: faker.location.country(),
+      sexe: Math.random() > 0.5 ? 'male' : 'female'
+    };
+  }
+
 }
