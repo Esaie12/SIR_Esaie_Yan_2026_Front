@@ -1,36 +1,47 @@
 <div class="container mt-4">
 
-  <div class="row g-4" *ngIf="groupe$ | async as groupe  ; else loading">
+  <!-- SPINNER pendant le chargement -->
+  <ng-container *ngIf="isLoading">
+    <div class="flex justify-center items-center min-h-[300px]">
+      <div class="w-16 h-16 border-4 border-rose-300/30 border-t-rose-500 rounded-full animate-spin"></div>
+    </div>
+  </ng-container>
 
-    <div class="col-12 ">
-      <h2>Gerer la catégorie <u class="" [style.color]="groupe.color">{{ groupe.libelle }}</u> </h2>
+  <!-- CONTENU une fois le groupe chargé -->
+  <div class="row g-4" *ngIf="!isLoading && groupe">
+
+    <div class="col-12">
+      <h2>Gerer la catégorie <u [style.color]="groupe.color">{{ groupe.libelle }}</u></h2>
     </div>
 
-    <!-- 📝 FORMULAIRE -->
+    <!-- 📝 FORMULAIRE MODIFICATION -->
     <div class="col-md-4">
       <div class="card p-3">
         <h5 class="mb-3">Modifier la catégorie</h5>
 
         <form (ngSubmit)="updateGroup()" #form="ngForm">
+
           <div class="mb-3">
             <label class="form-label">Libellé</label>
-            <input type="text" class="form-control" [(ngModel)]="groupeData.libelle" name="libelle">
+            <input type="text"
+                   class="form-control"
+                   [(ngModel)]="groupeData.libelle"
+                   name="libelle"
+                   required>
           </div>
 
           <div class="mb-3">
-            <label class="form-label">Type</label>
-
-            <input
-          type="color"
-          name="color"
-          [(ngModel)]="groupeData.color"
-          #color="ngModel"
-          class="form-control form-control-color mt-2">
+            <label class="form-label">Couleur</label>
+            <input type="color"
+                   name="color"
+                   [(ngModel)]="groupeData.color"
+                   class="form-control form-control-color mt-2">
           </div>
 
-          <button class="btn btn-primary w-100">
+          <button type="submit" class="btn btn-primary w-100">
             Valider la modification
           </button>
+
         </form>
       </div>
     </div>
@@ -44,8 +55,8 @@
           <li class="list-group-item d-flex justify-content-between align-items-center"
               *ngFor="let membre of membres">
             {{ membre.name }}
-
-            <button (click)="removeMembre(membre)" class="btn btn-sm btn-outline-danger">
+            <button (click)="removeMembre(membre)"
+                    class="btn btn-sm btn-outline-danger">
               Retirer
             </button>
           </li>
@@ -57,43 +68,36 @@
       </div>
     </div>
 
-    <!-- ➕ AJOUTER MEMBRES -->
+    <!-- ➕ AJOUTER DES MEMBRES -->
     <div class="col-md-4">
       <div class="card p-3">
         <h5 class="mb-3">Ajouter des membres</h5>
 
         <div class="list-group">
           <label class="list-group-item"
-                *ngFor="let user of usersDisponibles">
-
+                 *ngFor="let user of usersDisponibles">
             <input class="form-check-input me-2"
-                  type="checkbox"
-                  (change)="toggleUser(user.id!, $event)"
-                  [value]="user.id">
-
+                   type="checkbox"
+                   [value]="user.id"
+                   [checked]="selectedUsers.includes(user.id!)"
+                   (change)="toggleUser(user.id!, $event)">
             {{ user.name }}
           </label>
         </div>
 
-        <button (click)="addMembers()" class="btn btn-success w-100 mt-3"  [disabled]="selectedUsers.length === 0">
+        <p *ngIf="!usersDisponibles?.length" class="text-muted text-center mt-2">
+          Aucun utilisateur disponible
+        </p>
+
+        <button (click)="addMembers()"
+                class="btn btn-success w-100 mt-3"
+                [disabled]="selectedUsers.length === 0">
           Ajouter
         </button>
 
-        <p *ngIf="!(usersDisponibles$ | async)?.length" class="text-muted text-center mt-2">
-          Aucun utilisateur disponible
-        </p>
       </div>
     </div>
 
   </div>
-
-  <ng-template #loading>
-            <div class="flex justify-center items-center min-h-[300px]">
-                <div
-                class="w-16 h-16 border-4 border-rose-300/30 border-t-rose-500 rounded-full animate-spin">
-                </div>
-            </div>
-        </ng-template>
-
 
 </div>
