@@ -1,59 +1,121 @@
-# ProjectName
+# SIR_Esaie_Yan_2026_Front
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.23.
+Frontend Angular d’une application de gestion (clients, groupes/catégories, messages) avec authentification et tableau de bord.
 
-## Development server
+## 1) Prérequis
+Avant de lancer le projet, vérifiez :
+- **Node.js** (version LTS recommandée)
+- **npm** (installé avec Node.js)
+- **Angular CLI** (optionnel en global, sinon via `npx`)
 
-To start a local development server, run:
-
+Vérification rapide :
 ```bash
-ng serve
+node -v
+npm -v
+npx ng version
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
+## 2) Installation après clonage
+1. Cloner le dépôt :
 ```bash
-ng generate component component-name
+git clone <URL_DU_REPO>
+cd SIR_Esaie_Yan_2026_Front
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
+2. Installer les dépendances :
 ```bash
-ng generate --help
+npm install
 ```
 
-## Building
+3. (Optionnel) Vérifier l’URL de l’API backend dans :
+- `src/environment/environment.ts`
 
-To build the project run:
-
+## 3) Lancer l’application en local
+Démarrer le serveur de développement :
 ```bash
-ng build
+npm run start
+```
+> équivalent à `ng serve`
+
+Puis ouvrir :
+- `http://localhost:4200/`
+
+## 4) Scripts utiles
+- Lancer le front :
+```bash
+npm run start
+```
+- Build production :
+```bash
+npm run build
+```
+- Tests unitaires :
+```bash
+npm run test
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## 5) Parcours fonctionnels et boutons disponibles
 
-## Running unit tests
+### 5.1 Authentification
+- **/login**
+  - Bouton **Connexion**
+  - Bouton **Connexion aléatoire (auto-démo)**
+- **/register**
+  - Choix de profil (physique / entreprise)
+  - Bouton **Inscription**
+  - Bouton **Inscription aléatoire**
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+### 5.2 Dashboard
+- Bouton **Générer des données de démo** (données aléatoires)
+- Boutons de navigation rapide :
+  - **Voir mes messages**
+  - **Voir mes groupes**
+  - **Voir mes clients**
+  - **Envoyer un nouveau message**
 
-```bash
-ng test
-```
+### 5.3 Clients
+- **/clients**
+  - Bouton **+ Créer un nouveau client**
+  - Actions par ligne : **Modifier**, **Delete**
+- **/clients-create**
+  - Bouton **Créer mon client**
+  - Bouton de génération aléatoire (démo)
+- **/clients/edit/:id**
+  - Bouton **Modifier le client**
 
-## Running end-to-end tests
+### 5.4 Groupes / Catégories
+- **/category**
+  - Bouton **+ Créer un groupe**
+  - Actions : **Gérer**, **Supprimer**
+- **/category/:id/manage**
+  - Mise à jour du groupe
+  - Retrait d’un membre
+  - Ajout de membres (bouton **Ajouter**)
 
-For end-to-end (e2e) testing, run:
+### 5.5 Messages
+- **/messages**
+  - Bouton **+ Créer un nouveau message**
+  - Actions : **Modifier**, **Delete**
+- **/messages-create**
+  - Boutons **Annuler** et **Envoyer**
+  - Bouton de remplissage/génération aléatoire (démo)
+- **/messages/edit/:id**
+  - Bouton **Modifier**
 
-```bash
-ng e2e
-```
+## 6) Données aléatoires / mode démo
+Le projet inclut plusieurs actions “aléatoires” pratiques pour les démonstrations :
+- Connexion aléatoire
+- Inscription aléatoire
+- Génération de données de dashboard
+- Génération/remplissage auto dans certains formulaires
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Ces boutons permettent de tester rapidement les écrans sans saisie manuelle complète à chaque fois.
 
-## Additional Resources
+## 7) Rapport projet
+Un rapport détaillé prêt à compléter est disponible dans :
+- `RAPPORT_PROJET_FRONT.md`
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Il contient :
+- architecture du projet,
+- fonctionnement de l’application,
+- emplacements prévus pour les captures d’écran.
