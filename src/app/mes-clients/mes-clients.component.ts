@@ -1,93 +1,77 @@
-
-import { AfterViewInit, Component, inject, OnDestroy, OnInit } from '@angular/core';
-import $ from 'jquery';
-import 'datatables.net';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { CustomerService } from '../services/customer.service';
 import { AuthService } from '../services/auth.service';
-import { catchError, map, Observable, tap, throwError } from 'rxjs';
+import { catchError, map, throwError } from 'rxjs';
 import { Customer } from '../models/customer.model';
+
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-mes-clients',
   standalone: true,
-  imports: [RouterLink, CommonModule],
+  imports: [RouterLink, CommonModule, FormsModule],
   templateUrl: './mes-clients.component.html',
-  //styleUrl: './mes-clients.component.css'
 })
-export class MesClientsComponent implements OnInit{ // implements AfterViewInit, OnDestroy
+export class MesClientsComponent implements OnInit {
 
   private customerService = inject(CustomerService);
-  private authService = inject(AuthService);
-  user? = this.authService.getUser();
+  private authService     = inject(AuthService);
 
-  customers$!: Observable<Customer[]>;
-  error?: string;
+  user?      = this.authService.getUser();
+  customers: Customer[] = [];
+  filtered:  Customer[] = [];
+  search    = '';
+  pageSize  = 10;
+  page      = 1;
+  error?:   string;
 
+  clientToDelete?: Customer;
+  private deleteModal: any;
 
-  initDataTable() {
-    setTimeout(() => {
-      if (($.fn.DataTable as any).isDataTable('#myTable')) {
-        ($('#myTable') as any).DataTable().destroy();
-      }
-
-      $('#myTable').DataTable({
-        pageLength: 10,
-        lengthMenu: [5, 10, 20, 50],
-        language: {
-          search: "Rechercher:",
-          lengthMenu: "Afficher _MENU_ éléments",
-          info: "Affichage de _START_ à _END_ sur _TOTAL_ éléments",
-          /*paginate: {
-            next: "Suivant",
-            previous: "Précédent",
-            first: '',
-            last: ''
-          }*/
-        }
-      });
-    }, 0);
-  }
-
-  ngOnDestroy(): void {
-    if (($.fn.DataTable as any).isDataTable('#myTable')) {
-      ($('#myTable') as any).DataTable().destroy();
-    }
-  }
-
-
-  ngOnInit(): void {
-    this.fetchClients();
-  }
+  ngOnInit(): void { this.fetchClients(); }
 
   fetchClients() {
+    if (!this.user?.id) { this.error = 'Vous devez être connecté'; return; }
 
-      if (!this.user || this.user.id === undefined) {
-
-        this.error = 'Vous devez être connecté';
-        return;
-      }
-
-      this.customers$ =  this.customerService.getUserMessages(this.user?.id).pipe( // this.categoryService.getUserCategories().pipe(
-        tap((res: any) => {
-          console.log('CUSTOMERS API:', res);
-
-          setTimeout(() => {
-            this.initDataTable();
-          }, 0);
-
-        }),
-        map((res: any) => res.data),
-        catchError(err => {
-          this.error = 'Impossible de récupérer vos commandes';
-          console.error(err);
-          return throwError(() => err);
-        })
-      );
+    this.customerService.getUserMessages(this.user.id).pipe(
+      map((res: any) => res.data),
+      catchError(err => { this.error = 'Erreur'; return throwError(() => err); })
+    ).subscribe(data => { this.customers = data; this.applyFilter(); });
   }
 
+  applyFilter() {
+    const q = this.search.toLowerCase();
+    this.filtered = this.customers.filter(c =>
+      c.name?.toLowerCase().includes(q) ||
+      c.email?.toLowerCase().includes(q) ||
+      c.country?.toLowerCase().includes(q)
+    );
+    this.page = 1;
+  }
 
+  get paged() {
+    const start = (this.page - 1) * this.pageSize;
+    return this.filtered.slice(start, start + this.pageSize);
+  }
 
+  get totalPages() { return Math.ceil(this.filtered.length / this.pageSize); }
 
+  openDeleteModal(event: MouseEvent, customer: Customer) {
+    event.stopPropagation();
+    this.clientToDelete = customer;
+    if (this.deleteModal) this.deleteModal.dispose();
+    this.deleteModal = new bootstrap.Modal(document.getElementById('deleteClientModal'));
+    this.deleteModal.show();
+  }
+
+  confirmDelete() {
+    if (!this.clientToDelete?.id) return;
+    this.customerService.delete(this.clientToDelete.id).subscribe({
+      next: () => { this.deleteModal?.hide(); this.clientToDelete = undefined; this.fetchClients(); },
+      error: err => console.error(err)
+    });
+  }
 }
