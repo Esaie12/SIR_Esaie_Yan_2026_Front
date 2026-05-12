@@ -95,4 +95,36 @@ export class CategoryComponent {
     console.log('Groupe généré :', this.groupeData);
   }
 
+
+  deleteGroupe(id: number) {
+
+  const confirmDelete = confirm(
+    'Voulez-vous vraiment supprimer ce groupe ?'
+  );
+
+  if (!confirmDelete) {
+    return;
+  }
+
+  this.categoryService.delete(id).subscribe({
+
+    next: (res) => {
+
+      console.log('Groupe supprimé', res);
+
+      // refresh liste
+      this.fetchGroupes();
+    },
+
+    error: (err) => {
+
+      console.error(err);
+
+      alert('Erreur lors de la suppression');
+    }
+
+  });
+
+}
+
 }

@@ -109,4 +109,40 @@ export class MessageComponent implements OnDestroy{
   }
 
 
+  deleteMessage(id: number) {
+
+    const confirmDelete = confirm(
+      'Voulez-vous vraiment supprimer ce message ?'
+    );
+
+    if (!confirmDelete) {
+      return;
+    }
+
+    this.messageService.delete(id).subscribe({
+
+      next: (res) => {
+
+        console.log('Message supprimé', res);
+
+        // destroy DataTable avant refresh
+        if (($.fn.DataTable as any).isDataTable('#myTable')) {
+          ($('#myTable') as any).DataTable().destroy();
+        }
+
+        // refresh liste
+        this.fetchMessages();
+      },
+
+      error: (err) => {
+
+        console.error(err);
+
+        alert('Erreur lors de la suppression');
+      }
+
+    });
+
+  }
+
 }

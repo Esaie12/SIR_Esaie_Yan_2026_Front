@@ -32,7 +32,7 @@
 
         <div class="d-flex justify-content-end gap-2">
           <a [routerLink]="['/category', groupe.id, 'manage']" class="btn btn-sm btn-outline-secondary">Gérer</a>
-          <button class="btn btn-sm btn-outline-danger">Supprimer</button>
+          <button  (click)="deleteGroupe(groupe.id)" class="btn btn-sm btn-outline-danger">Supprimer</button>
         </div>
       </div>
     </div>

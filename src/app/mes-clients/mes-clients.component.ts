@@ -87,6 +87,26 @@ export class MesClientsComponent implements OnInit{ // implements AfterViewInit,
       );
   }
 
+  deleteCustomer(id: number) {
+
+    if (!confirm('Voulez-vous vraiment supprimer ce client ?')) {
+      return;
+    }
+
+    this.customerService.delete(id).subscribe({
+      next: (res) => {
+        console.log('Client supprimé', res);
+
+        // refresh liste
+        this.fetchClients();
+      },
+
+      error: (err) => {
+        console.error(err);
+        alert('Erreur lors de la suppression');
+      }
+    });
+  }
 
 
 

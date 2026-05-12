@@ -48,7 +48,7 @@
              <a [routerLink]="['/messages/edit', message.id]" class="btn btn-sm btn-primary">
                 Modifier
               </a>
-              <button class="btn btn-sm btn-danger">Delete</button>
+              <button (click)="deleteMessage(message.id)" class="btn btn-sm btn-danger">Delete</button>
             </td>
           </tr>
 
