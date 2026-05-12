@@ -109,13 +109,13 @@ export class MessageComponent implements OnDestroy{
   }
 
 
-  deleteMessage(id: number) {
+  deleteMessage(id?: number) {
 
     const confirmDelete = confirm(
       'Voulez-vous vraiment supprimer ce message ?'
     );
 
-    if (!confirmDelete) {
+    if (!confirmDelete || id === undefined) {
       return;
     }
 

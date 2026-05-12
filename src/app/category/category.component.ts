@@ -20,7 +20,7 @@ export class CategoryComponent {
   private categoryService = inject(CategoryService);
   private authService = inject(AuthService);
 
-  router = inject(Router);
+  private router = inject(Router);
 
   constructor() {
     if (!this.user || this.user.id === undefined) {
@@ -96,35 +96,32 @@ export class CategoryComponent {
   }
 
 
-  deleteGroupe(id: number) {
+  deleteGroupe(id?: number) {
 
-  const confirmDelete = confirm(
-    'Voulez-vous vraiment supprimer ce groupe ?'
-  );
+    const confirmDelete = confirm(
+      'Voulez-vous vraiment supprimer ce groupe ?'
+    );
 
-  if (!confirmDelete) {
-    return;
-  }
-
-  this.categoryService.delete(id).subscribe({
-
-    next: (res) => {
-
-      console.log('Groupe supprimé', res);
-
-      // refresh liste
-      this.fetchGroupes();
-    },
-
-    error: (err) => {
-
-      console.error(err);
-
-      alert('Erreur lors de la suppression');
+    if (!confirmDelete || id === undefined) {
+      return;
     }
+    this.categoryService.delete(id).subscribe({
 
-  });
+      next: (res) => {
 
-}
+        console.log('Groupe supprimé', res);
+        this.router.navigate(['/category']);
+      },
+
+      error: (err) => {
+
+        console.error(err);
+
+        alert('Erreur lors de la suppression');
+      }
+
+    });
+
+  }
 
 }

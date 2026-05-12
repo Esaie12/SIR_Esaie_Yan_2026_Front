@@ -2,7 +2,7 @@
 import { AfterViewInit, Component, inject, OnDestroy, OnInit } from '@angular/core';
 import $ from 'jquery';
 import 'datatables.net';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CustomerService } from '../services/customer.service';
 import { AuthService } from '../services/auth.service';
@@ -18,6 +18,7 @@ import { Customer } from '../models/customer.model';
 })
 export class MesClientsComponent implements OnInit{ // implements AfterViewInit, OnDestroy
 
+  router = inject(Router);
   private customerService = inject(CustomerService);
   private authService = inject(AuthService);
   user? = this.authService.getUser();
@@ -87,27 +88,21 @@ export class MesClientsComponent implements OnInit{ // implements AfterViewInit,
       );
   }
 
-  deleteCustomer(id: number) {
+  deleteCustomer(id?: number) {
 
-    if (!confirm('Voulez-vous vraiment supprimer ce client ?')) {
+    if ( id === undefined) {
       return;
     }
 
     this.customerService.delete(id).subscribe({
       next: (res) => {
-        console.log('Client supprimé', res);
-
-        // refresh liste
-        this.fetchClients();
+        this.router.navigate(['/clients']);
       },
-
       error: (err) => {
         console.error(err);
         alert('Erreur lors de la suppression');
       }
     });
   }
-
-
 
 }

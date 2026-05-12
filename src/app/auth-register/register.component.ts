@@ -134,4 +134,18 @@ export class RegisterComponent {
     console.log('Inscription fake générée ✔️');
   }
 
+  clearFakeAccounts() {
+
+    const confirmDelete = confirm('Voulez-vous vraiment supprimer tous les comptes de démonstration ?');
+
+    if (confirmDelete) {
+      localStorage.removeItem('fake_accounts');
+
+      console.log('Mémoire des comptes fake supprimée ✔️');
+
+      alert('Tous les comptes de démonstration ont été supprimés.');
+    }
+
+  }
+
 }
