@@ -17,6 +17,7 @@ declare var bootstrap: any;
 })
 export class MesClientsComponent implements OnInit {
 
+  router = inject(Router);
   private customerService = inject(CustomerService);
   private authService     = inject(AuthService);
 

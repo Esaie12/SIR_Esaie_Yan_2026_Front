@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { MessageService } from '../services/message.service';
 import { AuthService } from '../services/auth.service';
 import { CustomerService } from '../services/customer.service';
 import { faker } from '@faker-js/faker';
