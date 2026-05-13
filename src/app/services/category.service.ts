@@ -19,7 +19,7 @@ export class CategoryService  extends BaseService<Groupe>{
 
   // Tu peux ajouter des méthodes spécifiques à Category si nécessaire
   getUserCategories(userId: number) {
-    console.log('Récupération des catégories pour l\'utilisateur ID :', userId);
+    //console.log('Récupération des catégories pour l\'utilisateur ID :', userId);
     return this.http.get<Groupe[]>(`${this.urlApi}/by-user/${userId}`);
   }
 
@@ -42,6 +42,4 @@ export class CategoryService  extends BaseService<Groupe>{
   addUserToGroup(groupeId: number, clientId: number) {
     return this.http.post(`${environment.apiUrl}/clients/${clientId}/groupes/${groupeId}`, {});
   }
-
-
 }

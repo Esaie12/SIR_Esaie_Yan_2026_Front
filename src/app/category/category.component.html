@@ -8,8 +8,17 @@
     </button>
   </div>
 
-  <div class="row g-4" *ngIf="groupes$ | async as groupes; else noGroupes">
-    <div class="col-md-4" *ngFor="let groupe of groupes">
+  <!-- RECHERCHE -->
+  <div class="d-flex justify-content-end mb-3">
+    <input type="text"
+           class="form-control form-control-sm w-auto"
+           placeholder="Rechercher un groupe..."
+           [(ngModel)]="search"
+           (input)="applyFilter()">
+  </div>
+
+  <div class="row g-4" *ngIf="filtered.length > 0; else noGroupes">
+    <div class="col-md-4" *ngFor="let groupe of filtered">
       <div class="card p-3">
         <h5>{{groupe.libelle}}</h5>
         <p class="text-muted">{{groupe.description}}</p>
@@ -25,7 +34,7 @@
   </div>
 
   <ng-template #noGroupes>
-    <p class="text-center text-muted">Aucune catégorie disponible</p>
+    <p class="text-center text-muted">Aucun groupe disponible</p>
   </ng-template>
 
 </div>
@@ -77,7 +86,6 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-        <!-- Pas de data-bs-dismiss ici : c'est le TS qui ferme la modale après l'appel API -->
         <button type="button" class="btn btn-danger" (click)="confirmDelete()">Supprimer</button>
       </div>
     </div>

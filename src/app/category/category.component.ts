@@ -3,7 +3,7 @@ import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Groupe } from '../models/category.model';
-import { catchError, map, Observable, tap, throwError } from 'rxjs';
+import { catchError, map, throwError } from 'rxjs';
 import { CategoryService } from '../services/category.service';
 import { AuthService } from '../services/auth.service';
 import { faker } from '@faker-js/faker';
@@ -23,7 +23,9 @@ export class CategoryComponent {
   private authService     = inject(AuthService);
   router                  = inject(Router);
 
-  groupes$!: Observable<Groupe[]>;
+  groupes:   Groupe[] = [];
+  filtered:  Groupe[] = [];
+  search     = '';
   error?:    string;
   user?    = this.authService.getUser();
 
@@ -34,7 +36,6 @@ export class CategoryComponent {
     if (!this.user || this.user.id === undefined) {
       alert('Vous devez être connecté pour accéder au dashboard');
       this.router.navigate(['/login']);
-      this.groupes$ = new Observable();
       return;
     }
   }
@@ -43,36 +44,41 @@ export class CategoryComponent {
     this.fetchGroupes();
   }
 
-  // Charge la liste des groupes de l'utilisateur connecté
   fetchGroupes() {
     if (!this.user || this.user.id === undefined) {
       this.error = 'Vous devez être connecté';
       return;
     }
 
-    this.groupes$ = this.categoryService.getUserCategories(this.user.id).pipe(
-      tap((res: any) => console.log(res.data)),
+    this.categoryService.getUserCategories(this.user.id).pipe(
       map((res: any) => res.data),
       catchError(err => {
         this.error = 'Impossible de récupérer vos groupes';
         console.error(err);
         return throwError(() => err);
       })
+    ).subscribe(data => {
+      this.groupes = data;
+      this.applyFilter();
+    });
+  }
+
+  applyFilter() {
+    const q = this.search.toLowerCase();
+    this.filtered = this.groupes.filter(g =>
+      g.libelle?.toLowerCase().includes(q)
     );
   }
 
-  // Ouvre la modale de confirmation
   openDeleteModal(groupe: Groupe) {
     this.groupeToDelete = groupe;
+    if (this.deleteModal) this.deleteModal.dispose();
     this.deleteModal = new bootstrap.Modal(document.getElementById('deleteGroupeModal'));
     this.deleteModal.show();
   }
 
-  // Confirme la suppression — déplace le focus avant de fermer pour éviter aria-hidden
   confirmDelete() {
     if (!this.groupeToDelete?.id) return;
-
-    // Déplace le focus sur le body pour éviter le bug aria-hidden Bootstrap
     (document.activeElement as HTMLElement)?.blur();
 
     this.categoryService.delete(this.groupeToDelete.id).subscribe({
