@@ -183,13 +183,11 @@ Flux :
 
 ---
 
-## 5) Axes d’amélioration recommandés
-1. Ajouter des **Route Guards** (`canActivate`) pour protéger les routes connectées.
-2. Ajouter un **HttpInterceptor** pour injecter automatiquement le token dans les headers.
-3. Mettre en place une gestion uniforme des erreurs API (toasts/messages utilisateurs).
-4. Renforcer les validations de formulaires (sync + async).
-5. Compléter la couverture de tests unitaires et tests d’intégration.
-
+## 5) Axes d'amélioration recommandés
+1. Ajouter un **HttpInterceptor** pour injecter automatiquement le token dans les headers.
+2. Mettre en place une gestion uniforme des erreurs API (toasts/messages utilisateurs).
+3. Renforcer les validations de formulaires (sync + async).
+4. Compléter la couverture de tests unitaires et tests d'intégration.
 ---
 
 ## 6) Conclusion
