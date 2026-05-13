@@ -15,78 +15,79 @@
 
       <h5 class="mb-4">Connectez-vous à votre compte</h5>
 
+      <!-- SUCCÈS -->
+      <div class="alert alert-success d-flex align-items-center gap-2 mb-3"
+           *ngIf="loginSuccess"
+           role="alert">
+        <span>✅</span>
+        <span>Connexion réussie ! Redirection en cours...</span>
+      </div>
+
       <form #loginForm="ngForm" (ngSubmit)="seConnecter()" novalidate>
 
-      <div class="mb-3">
-        <input
-          type="email"
-          class="form-control"
-          [(ngModel)]="data.userEmail"
-          name="email"
-          #email="ngModel"
-          required
-          email
-          placeholder="Email address">
-
-        <!-- Message erreur -->
-        <div class="text-danger small" *ngIf="email.invalid && email.touched">
-          Email invalide
+        <div class="mb-3">
+          <input
+            type="email"
+            class="form-control"
+            [(ngModel)]="data.userEmail"
+            name="email"
+            #email="ngModel"
+            required
+            email
+            placeholder="Email address">
+          <div class="text-danger small" *ngIf="email.invalid && email.touched">
+            Email invalide
+          </div>
         </div>
+
+        <div class="mb-3">
+          <input
+            type="password"
+            class="form-control"
+            [(ngModel)]="data.userPassword"
+            name="password"
+            #password="ngModel"
+            required
+            minlength="6"
+            placeholder="********">
+          <div class="text-danger small" *ngIf="password.invalid && password.touched">
+            Mot de passe requis (min 6 caractères)
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-black w-100 mb-3"
+          [disabled]="loginForm.invalid || isLoading || loginSuccess">
+          <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+          {{ isLoading ? 'Connexion...' : 'Se connecter' }}
+        </button>
+
+      </form>
+
+      <div>
+        <span class="small">Vous n'avez pas encore de compte ? </span>
+        <a routerLink="/register" class="text-decoration-none">Inscrivez-vous ici</a>
       </div>
-
-      <div class="mb-3">
-        <input
-          type="password"
-          class="form-control"
-          [(ngModel)]="data.userPassword"
-          name="password"
-          #password="ngModel"
-          required
-          minlength="6"
-          placeholder="********">
-
-        <!-- Message erreur -->
-        <div class="text-danger small" *ngIf="password.invalid && password.touched">
-          Mot de passe requis (min 6 caractères)
-        </div>
-      </div>
-
-      <button
-        type="submit"
-        class="btn btn-black w-100 mb-3"
-        [disabled]="loginForm.invalid">
-        Se connecter
-      </button>
-
-
-    </form>
-
-
-
-        <div>
-          <span class="small">Vous n'avez pas encore de compte? </span>
-          <a routerLink="/register" class="text-decoration-none">Inscrivez-vous ici</a>
-        </div>
 
       <div class="mt-4 small text-muted">
-        <marquee behavior="" direction="">TP SIR - Esaïe Yan - 2026</marquee>
+        <marquee>TP SIR - Esaïe Yan - 2026</marquee>
       </div>
 
-       <button type="button"
-        class="btn btn-outline-warning w-100 mt-3"
-        (click)="loginRandomAccount()">
+      <button type="button"
+              class="btn btn-outline-warning w-100 mt-3"
+              (click)="loginRandomAccount()">
         Connexion aléatoire (auto-démo)
       </button>
 
       <p class="text-muted small mt-2 text-center">
         🔁 Mode démo : un compte aléatoire sera utilisé automatiquement si vous cliquez sur ce bouton.
         <br>
-        <span class="text-danger"> S’il n’existe aucun compte, un compte de test sera créé.</span>
-        <br> <br>
-        ⚠️ N’oubliez pas de cliquer sur <b>Se connecter</b>.
+        <span class="text-danger">S'il n'existe aucun compte, un compte de test sera créé.</span>
+        <br><br>
+        ⚠️ N'oubliez pas de cliquer sur <b>Se connecter</b>.
       </p>
 
     </div>
-
   </div>
 </div>

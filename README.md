@@ -1,6 +1,6 @@
 # SIR_Esaie_Yan_2026_Front
 
-Frontend Angular d’une application de gestion (clients, groupes/catégories, messages) avec authentification et tableau de bord.
+Frontend Angular d'une application de gestion (clients, groupes/catégories, messages) avec authentification et tableau de bord.
 
 ## 1) Prérequis
 Avant de lancer le projet, vérifiez :
@@ -27,10 +27,10 @@ cd SIR_Esaie_Yan_2026_Front
 npm install
 ```
 
-3. (Optionnel) Vérifier l’URL de l’API backend dans :
+3. (Optionnel) Vérifier l'URL de l'API backend dans :
 - `src/environment/environment.ts`
 
-## 3) Lancer l’application en local
+## 3) Lancer l'application en local
 Démarrer le serveur de développement :
 ```bash
 npm run start
@@ -66,7 +66,7 @@ npm run test
   - Bouton **Inscription aléatoire**
 
 ### 5.2 Dashboard
-- Bouton **Générer des données de démo** (données aléatoires)
+- Bouton **Générer des données de test** (données aléatoires)
 - Boutons de navigation rapide :
   - **Voir mes messages**
   - **Voir mes groupes**
@@ -76,7 +76,7 @@ npm run test
 ### 5.3 Clients
 - **/clients**
   - Bouton **+ Créer un nouveau client**
-  - Actions par ligne : **Modifier**, **Delete**
+  - Actions par ligne : **Modifier**, **Supprimer**
 - **/clients-create**
   - Bouton **Créer mon client**
   - Bouton de génération aléatoire (démo)
@@ -89,13 +89,13 @@ npm run test
   - Actions : **Gérer**, **Supprimer**
 - **/category/:id/manage**
   - Mise à jour du groupe
-  - Retrait d’un membre
+  - Retrait d'un membre
   - Ajout de membres (bouton **Ajouter**)
 
 ### 5.5 Messages
 - **/messages**
   - Bouton **+ Créer un nouveau message**
-  - Actions : **Modifier**, **Delete**
+  - Actions : **Modifier**, **Supprimer**
 - **/messages-create**
   - Boutons **Annuler** et **Envoyer**
   - Bouton de remplissage/génération aléatoire (démo)
@@ -103,7 +103,7 @@ npm run test
   - Bouton **Modifier**
 
 ## 6) Données aléatoires / mode démo
-Le projet inclut plusieurs actions “aléatoires” pratiques pour les démonstrations :
+Le projet inclut plusieurs actions "aléatoires" pratiques pour les démonstrations :
 - Connexion aléatoire
 - Inscription aléatoire
 - Génération de données de dashboard
@@ -111,11 +111,14 @@ Le projet inclut plusieurs actions “aléatoires” pratiques pour les démonst
 
 Ces boutons permettent de tester rapidement les écrans sans saisie manuelle complète à chaque fois.
 
-## 7) Rapport projet
-Un rapport détaillé prêt à compléter est disponible dans :
-- `RAPPORT_PROJET_FRONT.md`
+## 7) Guide utilisateur et rapport projet
+
+Un **guide utilisateur complet avec captures d'écran** est disponible dans :
+- [`RAPPORT_PROJET_FRONT.md`](RAPPORT_PROJET_FRONT.md)
 
 Il contient :
-- architecture du projet,
-- fonctionnement de l’application,
-- emplacements prévus pour les captures d’écran.
+- l'architecture du projet,
+- le **guide utilisateur illustré** (captures d'écran de chaque écran),
+- les axes d'amélioration.
+
+> Les captures d'écran sont dans le dossier `docs/`.

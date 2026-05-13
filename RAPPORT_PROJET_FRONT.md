@@ -8,177 +8,198 @@ Ce projet est une application **Angular (standalone)** orientée gestion de la r
 - Gestion des groupes (catégories)
 - Gestion des messages
 
-L’application consomme une API backend via `HttpClient` et s’appuie sur une architecture basée sur des composants Angular + services dédiés à chaque domaine métier.
+L'application consomme une API backend via `HttpClient` et s'appuie sur une architecture basée sur des composants Angular + services dédiés à chaque domaine métier.
 
 ---
 
-## 2) Architecture de l’application
+## 2) Architecture de l'application
 
 ### 2.1 Stack et structure technique
 - **Framework** : Angular CLI 19
 - **Architecture** : composants standalone, routage Angular, services injectables
 - **Communication API** : `HttpClient`
 - **Configuration globale** : `app.config.ts` (router + http client)
-- **Environnement** : URL d’API centralisée dans `environment.ts`
+- **Environnement** : URL d'API centralisée dans `environment.ts`
 
 ### 2.2 Organisation des dossiers
-- `src/app/auth-login`, `src/app/auth-register` : écrans d’authentification
+- `src/app/auth-login`, `src/app/auth-register` : écrans d'authentification
 - `src/app/dashboard` : statistiques et synthèse utilisateur
 - `src/app/mes-clients*` : listing, création, édition des clients
 - `src/app/category*` : listing et administration des groupes
 - `src/app/message*` : listing, création, édition des messages
-- `src/app/services` : couche d’accès aux données (API)
+- `src/app/services` : couche d'accès aux données (API)
 - `src/app/models` : modèles de données TypeScript
 
 ### 2.3 Routage (navigation)
 Le fichier `app.routes.ts` définit deux espaces :
 1. **Espace connecté** via `ConnectLayoutComponent` avec les routes :
-   - `/dashboard`
-   - `/category`
-   - `/category/:id/manage`
-   - `/messages`
-   - `/messages-create`
-   - `/messages/edit/:id`
-   - `/clients`
-   - `/clients-create`
-   - `/clients/edit/:id`
+  - `/dashboard`
+  - `/category`
+  - `/category/:id/manage`
+  - `/messages`
+  - `/messages-create`
+  - `/messages/edit/:id`
+  - `/clients`
+  - `/clients-create`
+  - `/clients/edit/:id`
 2. **Espace public** :
-   - `/login`
-   - `/register`
-
-Cette séparation améliore la lisibilité du parcours utilisateur et prépare le projet à l’ajout de guards de sécurité si besoin.
+  - `/login`
+  - `/register`
 
 ### 2.4 Couche services et réutilisation
 Le projet adopte un **service de base générique** `BaseService<T>` qui centralise les opérations CRUD communes :
-- `getAll`
-- `getById`
-- `create`
-- `update`
-- `delete`
+- `getAll`, `getById`, `create`, `update`, `delete`
 
-Ensuite, des services métiers héritent de cette base :
-- `CategoryService`
-- `CustomerService`
-- `MessageService`
-- `DashboardService`
-
-Avantage : réduction de la duplication de code et standardisation des appels API.
+Services métiers héritant de cette base :
+- `CategoryService`, `CustomerService`, `MessageService`, `DashboardService`
 
 ### 2.5 Authentification et session
 `AuthService` gère :
 - la connexion (`/accounts/login`)
-- l’inscription (`/accounts`)
+- l'inscription (`/accounts`)
 - la persistance locale (token + utilisateur dans `localStorage`)
 - les utilitaires de session (`isLoggedIn`, `getToken`, `getUser`)
 
-Cette approche permet de conserver l’état utilisateur côté navigateur entre les rechargements de page.
-
 ---
 
-## 3) Fonctionnement de l’application (avec emplacements captures)
+## 3) Guide utilisateur — Fonctionnement de l'application
 
-> Remarque : les blocs ci-dessous contiennent des zones réservées pour vos captures d’écran.
+### 3.1 Écran de connexion (`/login`)
 
-### 3.1 Écran de connexion
-Objectif : permettre à un utilisateur existant d’accéder à son espace.
+Objectif : permettre à un utilisateur existant d'accéder à son espace.
+
+![Page de connexion](docs/login.png)
 
 Flux :
-1. L’utilisateur saisit ses identifiants.
+1. L'utilisateur saisit son email et son mot de passe.
 2. Le front envoie la requête de login via `AuthService`.
-3. Si succès, le token et les infos utilisateur sont enregistrés dans `localStorage`.
-4. L’utilisateur est redirigé vers le dashboard.
+3. Si succès, une alerte verte s'affiche brièvement puis l'utilisateur est redirigé vers le dashboard.
 
-**[Capture écran à insérer : Page de connexion + retour succès]**
+![Connexion réussie](docs/login_succes.png)
 
----
-
-### 3.2 Écran d’inscription
-Objectif : créer un compte (profil personne physique ou entreprise selon votre logique métier).
-
-Flux :
-1. Saisie des informations dans le formulaire.
-2. Envoi des données au backend via `AuthService.register`.
-3. Traitement de la réponse et orientation vers la connexion (ou connexion directe selon votre choix UX).
-
-**[Capture écran à insérer : Formulaire d’inscription]**
+> Le bouton **Connexion aléatoire (auto-démo)** remplit automatiquement les champs avec un compte existant en mémoire locale, ou en crée un nouveau si aucun compte n'existe.
 
 ---
 
-### 3.3 Tableau de bord
-Objectif : afficher une vue synthétique de l’activité utilisateur.
+### 3.2 Écran d'inscription (`/register`)
+
+Objectif : créer un compte (personne physique ou entreprise).
+
+![Formulaire d'inscription](docs/register.png)
 
 Flux :
-1. Récupération de l’`userId` depuis la session locale.
-2. Appel du service `DashboardService.getMyDashboard(userId)`.
-3. Affichage des statistiques et indicateurs reçus.
+1. L'utilisateur choisit son type de profil (**Oui, je suis un humain** ou **Non, je suis une entreprise**).
+2. Saisie des informations dans le formulaire qui s'affiche.
+3. Soumission et redirection vers la connexion.
 
-**[Capture écran à insérer : Dashboard avec les statistiques]**
+> Le bouton **Inscription aléatoire** génère un compte de démonstration en un clic.
+
+---
+
+### 3.3 Tableau de bord (`/dashboard`)
+
+Objectif : afficher une vue synthétique de l'activité utilisateur.
+
+![Tableau de bord](docs/dashboard.png)
+
+Contenu affiché :
+- Nombre de **Groupes**, **Messages**, **Clients**, **Notifications**
+- Boutons d'**Actions rapides** : Voir mes messages, Voir mes groupes, Voir mes clients, Envoyer un nouveau message
+- Documentation intégrée de l'application (onglets Présentation, Fonctionnalités, Utilisation...)
+- Bouton **Générer des données de test** pour peupler rapidement la base
 
 ---
 
 ### 3.4 Gestion des clients
-Objectif : administrer les clients liés à l’utilisateur connecté.
+
+#### Liste des clients (`/clients`)
+
+![Liste des clients](docs/client_liste.png)
 
 Fonctionnalités :
-- Liste des clients (`/clients`)
-- Création d’un client (`/clients-create`)
-- Édition d’un client (`/clients/edit/:id`)
+- Sélecteur **Afficher X éléments** (5, 10, 20, 50)
+- Barre de **recherche** en temps réel (nom, email, pays)
+- Pagination automatique
+- Actions par ligne : **Modifier**, **Supprimer** (avec modale de confirmation)
 
-Flux général :
-1. Chargement de la liste via `CustomerService`.
-2. Création/édition via formulaires dédiés.
-3. Rafraîchissement de la vue après opération.
+#### Créer un client (`/clients-create`)
 
-**[Capture écran à insérer : Liste des clients]**
+![Créer un client](docs/save_client.png)
 
-**[Capture écran à insérer : Formulaire de création/édition d’un client]**
+- Formulaire avec validation (nom requis, email valide)
+- Bouton **Générer un client aléatoire** pour la démo
+
+#### Modifier un client (`/clients/edit/:id`)
+
+![Modifier un client](docs/update_client.png)
+
+- Formulaire pré-rempli avec les données existantes
+- Bouton **Modifier le client** pour valider
 
 ---
 
-### 3.5 Gestion des groupes (catégories)
-Objectif : organiser les clients par groupes.
+### 3.5 Gestion des groupes (`/category`)
 
-Fonctionnalités :
-- Liste des groupes utilisateur (`/category`)
-- Gestion détaillée d’un groupe (`/category/:id/manage`)
-- Ajout/retrait de clients dans un groupe
-- Visualisation des clients dans et hors groupe
+#### Liste des groupes
 
-Le service `CategoryService` expose des méthodes dédiées :
-- récupération des groupes utilisateur
-- récupération des clients d’un groupe
-- récupération des clients hors groupe
-- ajout/retrait d’un client dans un groupe
+![Liste des groupes](docs/list_group.png)
 
-**[Capture écran à insérer : Liste des groupes]**
+- Affichage en cards avec le nombre de membres
+- Barre de recherche
+- Actions : **Gérer**, **Supprimer**
+- Bouton **+ Créer un groupe** ouvre une modale
 
-**[Capture écran à insérer : Gestion d’un groupe (clients dans/hors groupe)]**
+#### Créer un groupe (modale)
+
+![Créer un groupe](docs/save_group.png)
+
+- Saisie du libellé et choix de la couleur
+- Bouton **Générer un groupe** pour la démo
+- Bouton **Valider la création**
+
+#### Gérer un groupe (`/category/:id/manage`)
+
+![Gérer un groupe](docs/gerer_group.png)
+
+Trois panneaux :
+1. **Modifier la catégorie** — libellé et couleur
+2. **Membres actuels** — liste avec bouton Retirer
+3. **Ajouter des membres** — liste des clients disponibles avec cases à cocher + bouton Ajouter
 
 ---
 
 ### 3.6 Gestion des messages
-Objectif : permettre la préparation et le suivi des messages.
 
-Fonctionnalités :
-- Liste des messages (`/messages`)
-- Création (`/messages-create`)
-- Édition (`/messages/edit/:id`)
+#### Liste des messages (`/messages`)
 
-Flux :
-1. Chargement des messages liés à l’utilisateur via `MessageService.getUserMessages(userId)`.
-2. Création/édition depuis les formulaires.
-3. Mise à jour de l’affichage après action.
+![Liste des messages](docs/list_message.png)
 
-**[Capture écran à insérer : Liste des messages]**
+- Sélecteur d'éléments par page + recherche
+- Affichage du **vrai nom** du destinataire (client ou groupe)
+- Date d'envoi formatée
+- Actions : **Modifier**, **Supprimer** (avec modale de confirmation)
 
-**[Capture écran à insérer : Formulaire de création/édition d’un message]**
+#### Créer un message (`/messages-create`)
+
+![Créer un message](docs/save_message.png)
+
+- Choix du type de destinataire (utilisateur simple ou groupe)
+- Date d'envoi initialisée à l'heure locale actuelle
+- Bouton **Générer un message aléatoire**
+
+#### Modifier un message (`/messages/edit/:id`)
+
+![Modifier un message](docs/update_message.png)
+
+- Formulaire pré-rempli avec les données existantes
+- Bouton **Modifier** pour valider
 
 ---
 
-## 4) Points forts de l’architecture
+## 4) Points forts de l'architecture
 - **Modularité** : composants séparés par domaine fonctionnel.
 - **Réutilisabilité** : `BaseService<T>` limite la duplication du CRUD.
-- **Scalabilité** : ajout de nouveaux modules facilité (nouveau composant + service + route).
+- **Scalabilité** : ajout de nouveaux modules facilité.
 - **Lisibilité** : séparation claire entre UI, routes, modèles et accès API.
 
 ---
@@ -188,7 +209,8 @@ Flux :
 2. Mettre en place une gestion uniforme des erreurs API (toasts/messages utilisateurs).
 3. Renforcer les validations de formulaires (sync + async).
 4. Compléter la couverture de tests unitaires et tests d'intégration.
+
 ---
 
 ## 6) Conclusion
-Ce frontend présente une base solide pour une application métier orientée gestion clients/messages/groupes. L’architecture actuelle favorise la maintenance et l’évolution, tout en restant suffisamment simple pour une prise en main rapide. Avec les améliorations proposées (sécurité, expérience utilisateur, robustesse), le projet peut monter en qualité et en fiabilité pour un usage en production.
+Ce frontend présente une base solide pour une application métier orientée gestion clients/messages/groupes. L'architecture actuelle favorise la maintenance et l'évolution, tout en restant suffisamment simple pour une prise en main rapide. Avec les améliorations proposées (sécurité, expérience utilisateur, robustesse), le projet peut monter en qualité et en fiabilité pour un usage en production.
