@@ -2,19 +2,16 @@
 
   <h4 class="mb-4">📊 Tableau de bord</h4>
 
-
-  <!-- STATS -->
   <div class="row g-4" *ngIf="stats$ | async as stats">
 
     <div class="col-lg-12">
       <div class="alert alert-info">
-      👋 Bonjour <strong>{{ user?.firstname }}</strong>,
-      vous êtes connecté en tant que
-      <strong>{{ user?.type === 'MORAL' ? 'Entreprise' : 'Particulier' }}</strong>.
-    </div>
+        👋 Bonjour <strong>{{ user?.firstname }}</strong>,
+        vous êtes connecté en tant que
+        <strong>{{ user?.type === 'MORAL' ? 'Entreprise' : 'Particulier' }}</strong>.
+      </div>
 
     </div>
-    <!-- CATEGORIES -->
     <div class="col-md-3">
       <div class="card p-3 text-center">
         <div class="stat-icon">📁</div>
@@ -23,7 +20,6 @@
       </div>
     </div>
 
-    <!-- MESSAGES -->
     <div class="col-md-3">
       <div class="card p-3 text-center">
         <div class="stat-icon">💬</div>
@@ -32,7 +28,6 @@
       </div>
     </div>
 
-    <!-- ABONNEMENTS -->
     <div class="col-md-3">
       <div class="card p-3 text-center">
         <div class="stat-icon">👥</div>
@@ -41,7 +36,6 @@
       </div>
     </div>
 
-    <!-- NOTIFICATIONS -->
     <div class="col-md-3">
       <div class="card p-3 text-center">
         <div class="stat-icon">🔔</div>
@@ -51,16 +45,15 @@
     </div>
 
     <div class="mb-4 text-end">
-    <button class="btn btn-danger" (click)="generateDemoData()">
-      ⚡ Générer des données de test
-    </button>
-  </div>
+      <button class="btn btn-danger" (click)="generateDemoData()">
+        ⚡ Générer des données de test
+      </button>
+    </div>
 
   </div>
 
   <div class="row">
     <div class="col-lg-12 text-center">
-      <!-- ACTIONS RAPIDES -->
       <div class="card mt-4 p-3">
         <h5>⚡ Actions rapides</h5>
 
@@ -76,173 +69,127 @@
 
   <div class="container mt-4">
 
-  <div class="card p-3 mt-4">
+    <div class="card p-3 mt-4">
 
-    <h4 class="mb-3">Documentation de l’application CRM</h4>
+      <h4 class="mb-3">Documentation de l’application CRM</h4>
 
-    <!-- NAV TABS -->
-    <ul class="nav nav-tabs" role="tablist">
+      <ul class="nav nav-tabs" role="tablist">
 
-      <li class="nav-item">
-        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#presentation">
-          Présentation
-        </button>
-      </li>
+        <li class="nav-item">
+          <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#presentation">
+            Présentation
+          </button>
+        </li>
 
-      <li class="nav-item">
-        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#features">
-          Fonctionnalités
-        </button>
-      </li>
+        <li class="nav-item">
+          <button class="nav-link" data-bs-toggle="tab" data-bs-target="#features">
+            Fonctionnalités
+          </button>
+        </li>
 
-      <li class="nav-item">
-        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#usage">
-          Utilisation
-        </button>
-      </li>
+        <li class="nav-item">
+          <button class="nav-link" data-bs-toggle="tab" data-bs-target="#usage">
+            Utilisation
+          </button>
+        </li>
 
-      <li class="nav-item">
-        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#demo">
-          Génération Data
-        </button>
-      </li>
+        <li class="nav-item">
+          <button class="nav-link" data-bs-toggle="tab" data-bs-target="#demo">
+            Génération Data
+          </button>
+        </li>
 
-      <li class="nav-item">
-        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#diagrams">
-          Diagrammes
-        </button>
-      </li>
+        <li class="nav-item">
+          <button class="nav-link" data-bs-toggle="tab" data-bs-target="#notes">
+            Notes
+          </button>
+        </li>
 
-      <li class="nav-item">
-        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#notes">
-          Notes
-        </button>
-      </li>
+      </ul>
 
-    </ul>
+      <div class="tab-content p-3 border border-top-0">
 
-    <!-- CONTENT -->
-    <div class="tab-content p-3 border border-top-0">
+        <div class="tab-pane fade show active" id="presentation">
+          <h5>🎯 Présentation du projet</h5>
+          <p>
+            Cette application est un CRM (Customer Relationship Management) permettant de gérer :
+          </p>
+          <ul>
+            <li>Les clients</li>
+            <li>Les groupes de clients</li>
+            <li>Les messages envoyés</li>
+          </ul>
+          <p>
+            Elle est développée avec Angular et une API REST.
+          </p>
+        </div>
 
-      <!-- PRESENTATION -->
-      <div class="tab-pane fade show active" id="presentation">
-        <h5>🎯 Présentation du projet</h5>
-        <p>
-          Cette application est un CRM (Customer Relationship Management) permettant de gérer :
-        </p>
-        <ul>
-          <li>Les clients</li>
-          <li>Les groupes de clients</li>
-          <li>Les messages envoyés</li>
-        </ul>
-        <p>
-          Elle est développée avec Angular et une API REST.
-        </p>
-      </div>
+        <div class="tab-pane fade" id="features">
+          <h5>⚙️ Fonctionnalités</h5>
 
-      <!-- FEATURES -->
-      <div class="tab-pane fade" id="features">
-        <h5>⚙️ Fonctionnalités</h5>
+          <ul>
+            <li>Création / modification / suppression de clients</li>
+            <li>Gestion de groupes</li>
+            <li>Assignation de clients à des groupes</li>
+            <li>Envoi de messages individuels ou groupés</li>
+            <li>Dashboard statistique</li>
+            <li>Génération de données de test (faker.js)</li>
+          </ul>
+        </div>
 
-        <ul>
-          <li>Création / modification / suppression de clients</li>
-          <li>Gestion de groupes</li>
-          <li>Assignation de clients à des groupes</li>
-          <li>Envoi de messages individuels ou groupés</li>
-          <li>Dashboard statistique</li>
-          <li>Génération de données de test (faker.js)</li>
-        </ul>
-      </div>
+        <div class="tab-pane fade" id="usage">
+          <h5>🚀 Utilisation</h5>
 
-      <!-- USAGE -->
-      <div class="tab-pane fade" id="usage">
-        <h5>🚀 Utilisation</h5>
+          <ol>
+            <li>Se connecter à l’application</li>
+            <li>Accéder au dashboard</li>
+            <li>Créer des clients et groupes</li>
+            <li>Envoyer des messages</li>
+          </ol>
 
-        <ol>
-          <li>Se connecter à l’application</li>
-          <li>Accéder au dashboard</li>
-          <li>Créer des clients et groupes</li>
-          <li>Envoyer des messages</li>
-        </ol>
+          <p class="text-muted">
+            Les données peuvent être générées automatiquement pour tester le système.
+          </p>
+        </div>
 
-        <p class="text-muted">
-          Les données peuvent être générées automatiquement pour tester le système.
-        </p>
-      </div>
+        <div class="tab-pane fade" id="demo">
+          <h5>🎲 Génération de données</h5>
 
-      <!-- DEMO DATA -->
-      <div class="tab-pane fade" id="demo">
-        <h5>🎲 Génération de données</h5>
+          <p>
+            Le bouton "Générer Data" permet de créer automatiquement :
+          </p>
 
-        <p>
-          Le bouton "Générer Data" permet de créer automatiquement :
-        </p>
+          <ul>
+            <li>4 à 8 clients aléatoires</li>
+            <li>2 à 5 groupes</li>
+            <li>4 à 8 messages</li>
+            <li>Relations clients ↔ groupes</li>
+          </ul>
 
-        <ul>
-          <li>4 à 8 clients aléatoires</li>
-          <li>2 à 5 groupes</li>
-          <li>4 à 8 messages</li>
-          <li>Relations clients ↔ groupes</li>
-        </ul>
+          <p class="text-danger">
+            ⚠️ Les données sont fictives et générées avec Faker.js
+          </p>
+        </div>
 
-        <p class="text-danger">
-          ⚠️ Les données sont fictives et générées avec Faker.js
-        </p>
-      </div>
+        <div class="tab-pane fade" id="notes">
+          <h5>🧠 Notes techniques</h5>
 
-      <!-- DIAGRAMMES -->
-      <div class="tab-pane fade" id="diagrams">
-        <h5>📊 Diagrammes UML</h5>
+          <ul>
+            <li>Frontend : Angular</li>
+            <li>Backend : API REST (JAVA - Jpa)</li>
+            <li>Faker.js utilisé pour les données de test</li>
+            <li>RxJS pour la gestion des flux asynchrones</li>
+          </ul>
 
-        <p>
-          Voici les diagrammes utilisés pour concevoir l’application :
-        </p>
+          <p>
+            💡 Ce projet est conçu dans un contexte académique.
+          </p>
+        </div>
 
-        <hr>
-
-        <!-- DIAGRAMME DE CLASSE -->
-        <h6>📦 Diagramme de classe</h6>
-        <img src="assets/diagrams/class-diagram.png"
-             class="img-fluid border rounded shadow-sm mb-3"
-             alt="Diagramme de classe">
-
-        <p class="text-muted">
-          Ce diagramme montre la structure des entités : Client, Groupe, Message.
-        </p>
-
-        <hr>
-
-        <!-- DIAGRAMME DE CAS D'UTILISATION -->
-        <h6>👤 Diagramme de cas d’utilisation</h6>
-        <img src="assets/diagrams/use-case.png"
-             class="img-fluid border rounded shadow-sm"
-             alt="Diagramme de cas d'utilisation">
-
-        <p class="text-muted">
-          Il illustre les interactions entre l’utilisateur et le système.
-        </p>
-      </div>
-
-      <!-- NOTES -->
-      <div class="tab-pane fade" id="notes">
-        <h5>🧠 Notes techniques</h5>
-
-        <ul>
-          <li>Frontend : Angular</li>
-          <li>Backend : API REST (JAVA - Jpa)</li>
-          <li>Faker.js utilisé pour les données de test</li>
-          <li>RxJS pour la gestion des flux asynchrones</li>
-        </ul>
-
-        <p>
-          💡 Ce projet est conçu dans un contexte académique.
-        </p>
       </div>
 
     </div>
 
   </div>
-
-</div>
 
 </div>
