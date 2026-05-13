@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MessageService } from '../services/message.service';
 import { CategoryService } from '../services/category.service';
 import { CustomerService } from '../services/customer.service';
@@ -10,34 +10,35 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-message-edit',
-  imports: [CommonModule, FormsModule],
+  standalone: true,
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './message-edit.component.html',
   styleUrl: './message-edit.component.css'
 })
 export class MessageEditComponent {
 
-  private messageService = inject(MessageService);
+  private messageService  = inject(MessageService);
   private categoryService = inject(CategoryService);
   private customerService = inject(CustomerService);
-  private authService = inject(AuthService);
-  private route = inject(ActivatedRoute);
-  private router = inject(Router);
+  private authService     = inject(AuthService);
+  private route           = inject(ActivatedRoute);
+  private router          = inject(Router);
 
   messageId = Number(this.route.snapshot.paramMap.get('id'));
-  user? = this.authService.getUser();
-  error?: string;
+  user?     = this.authService.getUser();
+  error?:   string;
 
   form = {
-    title: '',
+    title:            '',
     typeDestinataire: 'user',
-    userId: null as number | null,
-    groupeId: null as number | null,
-    dateSend: '',
-    content: ''
+    userId:           null as number | null,
+    groupeId:         null as number | null,
+    dateSend:         '',
+    content:          ''
   };
 
   customersList: any[] = [];
-  groupesList: any[] = [];
+  groupesList:   any[] = [];
 
   ngOnInit() {
     this.loadMessage();
@@ -49,73 +50,47 @@ export class MessageEditComponent {
     this.messageService.getById(this.messageId).pipe(
       map((res: any) => res.data)
     ).subscribe(msg => {
-
       this.form = {
-        title: msg.title,
+        title:            msg.title,
         typeDestinataire: msg.userId ? 'user' : 'group',
-        userId: msg.userId ?? null,
-        groupeId: msg.groupeId ?? null,
-        dateSend: msg.dateSend?.slice(0, 16),
-        content: msg.content
+        userId:           msg.userId   ?? null,
+        groupeId:         msg.groupeId ?? null,
+        dateSend:         msg.dateSend?.slice(0, 16) ?? '',
+        content:          msg.content
       };
-
     });
   }
 
   submit() {
-
     if (!this.user || this.user.id === undefined) {
-          alert('Vous devez être connecté pour accéder au dashboard');
-
-          this.router.navigate(['/login']);
-          return;
-    }
-
-    const { typeDestinataire, ...rest } = this.form;
-
-    if (typeDestinataire === 'user') {
-      rest.groupeId = null;
-    } else {
-      rest.userId = null;
+      this.router.navigate(['/login']);
+      return;
     }
 
     const payload = {
       senderId: this.user.id,
-      title: this.form.title,
-
-      userId: this.form.typeDestinataire === 'user'
-        ? this.form.userId ?? null
-        : null,
-
-      groupeId: this.form.typeDestinataire === 'group'
-        ? this.form.groupeId ?? null
-        : null,
-
+      title:    this.form.title,
+      userId:   this.form.typeDestinataire === 'user'  ? this.form.userId   ?? null : null,
+      groupeId: this.form.typeDestinataire === 'group' ? this.form.groupeId ?? null : null,
       dateSend: this.form.dateSend,
-      content: this.form.content
+      content:  this.form.content
     };
 
     this.messageService.update(this.messageId, payload).subscribe({
-      next: () => {
-        console.log('Message mis à jour');
-        this.router.navigate(['/messages']);
-      },
-      error: err => {
-        console.error(err);
-        this.error = 'Une erreur est survenue lors de la mise à jour du message.';
-      }
+      next:  () => this.router.navigate(['/messages']),
+      error: err => { console.error(err); this.error = 'Erreur lors de la mise à jour.'; }
     });
-
   }
 
   fetchGroupes() {
-    this.categoryService.getAll().pipe(
+    this.categoryService.getUserCategories(this.user?.id).pipe(
       map((res: any) => res.data)
     ).subscribe(data => this.groupesList = data);
   }
 
   fetchClients() {
-    this.customerService.getUserMessages(1).pipe(
+    if (!this.user?.id) return;
+    this.customerService.getUserMessages(this.user.id).pipe(
       map((res: any) => res.data)
     ).subscribe(data => this.customersList = data);
   }

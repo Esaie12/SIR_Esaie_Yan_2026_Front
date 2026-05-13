@@ -29,12 +29,12 @@ export class MesClientsEditComponent {
   ngOnInit() {
     this.clientId = Number(this.route.snapshot.paramMap.get('id'));
 
-    console.log('ID récupéré depuis l’URL :', this.clientId);
+   // console.log('ID récupéré depuis l’URL :', this.clientId);
 
     if (this.clientId) {
       this.customerService.getById(this.clientId).subscribe({
         next: (res: any) => {
-          console.log('Données du client reçues :', res);
+        //  console.log('Données du client reçues :', res);
           this.clientData = res.data;
         },
         error: (err) => {

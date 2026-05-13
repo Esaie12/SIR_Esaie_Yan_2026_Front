@@ -49,10 +49,10 @@ private authService = inject(AuthService);
       return;
     }
 
-    console.log('Utilisateur connecté :', this.user);
+  //  console.log('Utilisateur connecté :', this.user);
 
     this.stats$ = this.dashboardService.getMyDashboard(this.user.id).pipe(
-      tap(res => console.log('API RESPONSE:', res)),
+    //  tap(res => console.log('API RESPONSE:', res)),
       map((res: any) => res.data),
       tap(data => {
        // console.log('DASHBOARD DATA:', data);

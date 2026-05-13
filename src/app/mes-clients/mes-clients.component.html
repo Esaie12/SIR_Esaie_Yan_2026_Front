@@ -2,43 +2,95 @@
 
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h3>Mes clients</h3>
-
-    <!-- 🔘 ADD BUTTON déplacé ici -->
     <a class="btn btn-success" routerLink="/clients-create">+ Créer un nouveau client</a>
   </div>
 
-  <!-- 🔷 TABLE -->
+  <!-- RECHERCHE + NB PAR PAGE -->
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <div>
+      Afficher
+      <select [(ngModel)]="pageSize" (change)="applyFilter()" class="form-select form-select-sm d-inline-block w-auto mx-1">
+        <option [value]="5">5</option>
+        <option [value]="10">10</option>
+        <option [value]="20">20</option>
+        <option [value]="50">50</option>
+      </select>
+      éléments
+    </div>
+    <input type="text" class="form-control form-control-sm w-auto"
+           placeholder="Rechercher..." [(ngModel)]="search" (input)="applyFilter()">
+  </div>
+
   <div class="card p-3">
     <div class="table-responsive">
-      <table id="myTable" class="table table-hover">
+      <table class="table table-hover">
         <thead class="table-light">
-          <tr>
-            <th>#</th>
-            <th>Nom</th>
-            <th>Email</th>
-            <th>Téléphone</th>
-            <th>Pays</th>
-            <th>Actions</th>
-          </tr>
+        <tr>
+          <th>#</th>
+          <th>Nom</th>
+          <th>Email</th>
+          <th>Téléphone</th>
+          <th>Pays</th>
+          <th>Actions</th>
+        </tr>
         </thead>
-
         <tbody>
-          <tr *ngFor="let customer of customers$ | async; let i = index">
-            <td>{{ i + 1 }}</td>
-            <td>{{ customer.name }}</td>
-            <td>{{ customer.email }}</td>
-            <td>{{ customer.phone }}</td>
-            <td>{{ customer.country }}</td>
-            <td>
-              <a [routerLink]="['/clients/edit', customer.id]" class="btn btn-sm btn-primary">
-                Modifier
-              </a>
-              <button (click)="deleteCustomer(customer.id)" class="btn btn-sm btn-danger">Supprimer</button>
-            </td>
-          </tr>
+        <tr *ngFor="let customer of paged; let i = index">
+          <td>{{ (page - 1) * pageSize + i + 1 }}</td>
+          <td>{{ customer.name }}</td>
+          <td>{{ customer.email }}</td>
+          <td>{{ customer.phone }}</td>
+          <td>{{ customer.country }}</td>
+          <td class="d-flex gap-2">
+            <a [routerLink]="['/clients/edit', customer.id]" class="btn btn-sm btn-primary">Modifier</a>
+            <button class="btn btn-sm btn-danger" (click)="openDeleteModal($event, customer)">Supprimer</button>
+          </td>
+        </tr>
+        <tr *ngIf="paged.length === 0">
+          <td colspan="6" class="text-center text-muted">Aucun client</td>
+        </tr>
         </tbody>
       </table>
     </div>
   </div>
 
+  <!-- PAGINATION -->
+  <div class="d-flex justify-content-between align-items-center mt-2" *ngIf="totalPages > 1">
+    <small class="text-muted">{{ filtered.length }} éléments au total</small>
+    <nav>
+      <ul class="pagination pagination-sm mb-0">
+        <li class="page-item" [class.disabled]="page === 1">
+          <button class="page-link" (click)="page = page - 1">Précédent</button>
+        </li>
+        <li class="page-item" *ngFor="let p of [].constructor(totalPages); let i = index"
+            [class.active]="page === i + 1">
+          <button class="page-link" (click)="page = i + 1">{{ i + 1 }}</button>
+        </li>
+        <li class="page-item" [class.disabled]="page === totalPages">
+          <button class="page-link" (click)="page = page + 1">Suivant</button>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+</div>
+
+<!-- MODAL SUPPRESSION CLIENT -->
+<div class="modal fade" id="deleteClientModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title">Confirmer la suppression</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p>Voulez-vous vraiment supprimer <strong>{{ clientToDelete?.name }}</strong> ?</p>
+        <p class="text-danger mb-0"><small>⚠️ Cette action est irréversible.</small></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+        <button type="button" class="btn btn-danger" (click)="confirmDelete()">Supprimer</button>
+      </div>
+    </div>
+  </div>
 </div>

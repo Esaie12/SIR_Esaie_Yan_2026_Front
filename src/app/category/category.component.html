@@ -1,125 +1,93 @@
-<!-- 🔷 CONTENU -->
+<!-- CONTENU -->
 <div class="container mt-4">
 
-  <!-- HEADER -->
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h4>Groupes</h4>
-
-    <!-- 🔘 BOUTON CREER -->
     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#categoryModal">
       + Créer un groupe
     </button>
   </div>
 
-  <!-- 🔷 LISTE EN CARDS  && groupes.length > 0 -->
+  <!-- RECHERCHE -->
+  <div class="d-flex justify-content-end mb-3">
+    <input type="text"
+           class="form-control form-control-sm w-auto"
+           placeholder="Rechercher un groupe..."
+           [(ngModel)]="search"
+           (input)="applyFilter()">
+  </div>
 
-  <div class="row g-4" *ngIf="groupes$ | async as groupes; else noGroupes">
-
-    <!-- CARD -->
-    <div class="col-md-4" *ngFor="let groupe of groupes">
+  <div class="row g-4" *ngIf="filtered.length > 0; else noGroupes">
+    <div class="col-md-4" *ngFor="let groupe of filtered">
       <div class="card p-3">
-        <div class="d-flex justify-content-between">
-          <h5>{{groupe.libelle}}</h5>
-        </div>
-
-        <p class="text-muted">
-          {{groupe.description}}
-        </p>
-
-        <p class="fw-bold">
-          👤 {{groupe.memberCount}} membres
-        </p>
-
+        <h5>{{groupe.libelle}}</h5>
+        <p class="text-muted">{{groupe.description}}</p>
+        <p class="fw-bold">👤 {{groupe.memberCount}} membres</p>
         <div class="d-flex justify-content-end gap-2">
-          <a [routerLink]="['/category', groupe.id, 'manage']" class="btn btn-sm btn-outline-secondary">Gérer</a>
-          <button  (click)="deleteGroupe(groupe.id)" class="btn btn-sm btn-outline-danger">Supprimer</button>
+          <a [routerLink]="['/category', groupe.id, 'manage']"
+             class="btn btn-sm btn-outline-secondary">Gérer</a>
+          <button class="btn btn-sm btn-outline-danger"
+                  (click)="openDeleteModal(groupe)">Supprimer</button>
         </div>
       </div>
     </div>
-
   </div>
 
   <ng-template #noGroupes>
-    <p class="text-center text-muted">Aucune catégorie disponible</p>
+    <p class="text-center text-muted">Aucun groupe disponible</p>
   </ng-template>
-
 
 </div>
 
-<!-- 🔷 MODAL CREATION -->
-<!-- 🔷 MODAL CREATION -->
+<!-- MODAL CREATION -->
 <div class="modal fade" id="categoryModal">
   <div class="modal-dialog modal-dialog-centered">
-    <form #groupeForm="ngForm"
-          (ngSubmit)="onSubmit(groupeForm)"
-          class="modal-content">
-
-      <!-- HEADER -->
+    <form #groupeForm="ngForm" (ngSubmit)="onSubmit(groupeForm)" class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Créer un groupe</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
-
-      <!-- BODY -->
       <div class="modal-body">
-
-        <!-- LIBELLE -->
-        <input
-          class="form-control mb-2"
-          placeholder="Titre"
-          name="libelle"
-          [(ngModel)]="groupeData.libelle"
-          required
-          minlength="3"
-          #libelle="ngModel">
-
+        <input class="form-control mb-2" placeholder="Titre" name="libelle"
+               [(ngModel)]="groupeData.libelle" required minlength="3" #libelle="ngModel">
         <div class="text-danger" *ngIf="libelle.invalid && libelle.touched">
           <span *ngIf="libelle.errors?.['required']">Le titre est requis</span>
           <span *ngIf="libelle.errors?.['minlength']">Minimum 3 caractères</span>
         </div>
-
-        <!-- COLOR -->
-        <input
-          type="color"
-          name="color"
-          [(ngModel)]="groupeData.color"
-          required
-          #color="ngModel"
-          class="form-control form-control-color mt-2">
-
+        <input type="color" name="color" [(ngModel)]="groupeData.color"
+               required #color="ngModel" class="form-control form-control-color mt-2">
         <div class="text-danger" *ngIf="color.invalid && color.touched">
           <span>La couleur est requise</span>
         </div>
-
-        <div class="">
-          <i>Apres avoir généré les données du groupe, n'oubliez pas de cliquer sur valider la création</i>
+        <div class="mt-2">
+          <i>Après avoir généré les données du groupe, n'oubliez pas de cliquer sur valider la création</i>
         </div>
-
       </div>
-
-      <!-- FOOTER -->
       <div class="modal-footer d-flex flex-wrap gap-2">
-
-        <button type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal">
-          Fermer
-        </button>
-
-        <button type="submit"
-                class="btn btn-primary"
-                [disabled]="groupeForm.invalid">
-          Valider la création
-        </button>
-
-        <button type="button"
-                class="btn btn-outline-warning"
-                (click)="generateFakeGroupe()">
-          Générer un groupe
-        </button>
-
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+        <button type="submit" class="btn btn-primary" [disabled]="groupeForm.invalid">Valider la création</button>
+        <button type="button" class="btn btn-outline-warning" (click)="generateFakeGroupe()">Générer un groupe</button>
       </div>
-
     </form>
+  </div>
+</div>
+
+<!-- MODAL SUPPRESSION -->
+<div class="modal fade" id="deleteGroupeModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title">Confirmer la suppression</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p>Voulez-vous vraiment supprimer le groupe <strong>{{ groupeToDelete?.libelle }}</strong> ?</p>
+        <p class="text-danger mb-0"><small>⚠️ Cette action est irréversible.</small></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+        <button type="button" class="btn btn-danger" (click)="confirmDelete()">Supprimer</button>
+      </div>
+    </div>
   </div>
 </div>

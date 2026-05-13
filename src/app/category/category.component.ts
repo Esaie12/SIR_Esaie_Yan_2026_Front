@@ -3,10 +3,12 @@ import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Groupe } from '../models/category.model';
-import { catchError, map, Observable, tap, throwError } from 'rxjs';
+import { catchError, map, throwError } from 'rxjs';
 import { CategoryService } from '../services/category.service';
 import { AuthService } from '../services/auth.service';
 import { faker } from '@faker-js/faker';
+
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-category',
@@ -18,71 +20,86 @@ import { faker } from '@faker-js/faker';
 export class CategoryComponent {
 
   private categoryService = inject(CategoryService);
-  private authService = inject(AuthService);
+  private authService     = inject(AuthService);
+  router                  = inject(Router);
 
-  private router = inject(Router);
+  groupes:   Groupe[] = [];
+  filtered:  Groupe[] = [];
+  search     = '';
+  error?:    string;
+  user?    = this.authService.getUser();
+
+  groupeToDelete?: Groupe;
+  private deleteModal: any;
 
   constructor() {
     if (!this.user || this.user.id === undefined) {
       alert('Vous devez être connecté pour accéder au dashboard');
-
       this.router.navigate(['/login']);
-      this.groupes$ = new Observable(); // évite crash async
       return;
     }
   }
 
-  groupes$!: Observable<Groupe[]>;
-  error?: string;
-  user? = this.authService.getUser();
-
-
   ngOnInit(): void {
-   // console.log('User connecté :', this.user);
     this.fetchGroupes();
   }
 
+  fetchGroupes() {
+    if (!this.user || this.user.id === undefined) {
+      this.error = 'Vous devez être connecté';
+      return;
+    }
 
+    this.categoryService.getUserCategories(this.user.id).pipe(
+      map((res: any) => res.data),
+      catchError(err => {
+        this.error = 'Impossible de récupérer vos groupes';
+        console.error(err);
+        return throwError(() => err);
+      })
+    ).subscribe(data => {
+      this.groupes = data;
+      this.applyFilter();
+    });
+  }
+
+  applyFilter() {
+    const q = this.search.toLowerCase();
+    this.filtered = this.groupes.filter(g =>
+      g.libelle?.toLowerCase().includes(q)
+    );
+  }
+
+  openDeleteModal(groupe: Groupe) {
+    this.groupeToDelete = groupe;
+    if (this.deleteModal) this.deleteModal.dispose();
+    this.deleteModal = new bootstrap.Modal(document.getElementById('deleteGroupeModal'));
+    this.deleteModal.show();
+  }
+
+  confirmDelete() {
+    if (!this.groupeToDelete?.id) return;
+    (document.activeElement as HTMLElement)?.blur();
+
+    this.categoryService.delete(this.groupeToDelete.id).subscribe({
+      next: () => {
+        this.deleteModal?.hide();
+        this.groupeToDelete = undefined;
+        this.fetchGroupes();
+      },
+      error: err => console.error('Erreur suppression groupe', err)
+    });
+  }
 
   onSubmit(form: any) {
-    if(form.valid) {
-
-      const payload = {
-        ...form.value,
-        userId: this.user?.id
-      };
-
-      console.log("Payload envoyé :", payload);
-
-      // Exemple envoi API
+    if (form.valid) {
+      const payload = { ...form.value, userId: this.user?.id };
       this.categoryService.create(payload).subscribe({
-        next: () => {
-          this.fetchGroupes();
-          form.reset();
-        },
+        next: () => { this.fetchGroupes(); form.reset(); },
         error: err => console.error(err)
       });
     }
   }
-
-  //getUserCategories
-  fetchGroupes() {
-    if (!this.user || this.user.id === undefined) {
-        this.error = 'Vous devez être connecté';
-        return;
-      }
-
-    this.groupes$ =  this.categoryService.getUserCategories(this.user?.id).pipe( // this.categoryService.getUserCategories().pipe(
-      tap((res: any) => console.log(res.data)),
-      map((res: any) => res.data),
-      catchError(err => {
-        this.error = 'Impossible de récupérer vos commandes';
-        console.error(err);
-        return throwError(() => err);
-      })
-    );
-  }
-
 
   groupeData: any = {};
 
@@ -91,37 +108,5 @@ export class CategoryComponent {
       libelle: faker.commerce.department() + ' ' + faker.number.int(1000),
       color: faker.color.rgb()
     };
-
-    console.log('Groupe généré :', this.groupeData);
   }
-
-
-  deleteGroupe(id?: number) {
-
-    const confirmDelete = confirm(
-      'Voulez-vous vraiment supprimer ce groupe ?'
-    );
-
-    if (!confirmDelete || id === undefined) {
-      return;
-    }
-    this.categoryService.delete(id).subscribe({
-
-      next: (res) => {
-
-        console.log('Groupe supprimé', res);
-        this.router.navigate(['/category']);
-      },
-
-      error: (err) => {
-
-        console.error(err);
-
-        alert('Erreur lors de la suppression');
-      }
-
-    });
-
-  }
-
 }

@@ -1,148 +1,125 @@
-import { AfterViewInit, Component, inject, OnDestroy } from '@angular/core';
-import $ from 'jquery';
-import 'datatables.net';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { catchError, map, Observable, tap, throwError } from 'rxjs';
+import { catchError, map, throwError } from 'rxjs';
 import { MessageService } from '../services/message.service';
 import { AuthService } from '../services/auth.service';
+import { CustomerService } from '../services/customer.service';
+import { CategoryService } from '../services/category.service';
 import { Message } from '../models/message.model';
 import { CommonModule, DatePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-message',
   standalone: true,
-  imports: [RouterLink,CommonModule, DatePipe],
+  imports: [RouterLink, CommonModule, DatePipe, FormsModule],
   templateUrl: './message.component.html',
-  styleUrl: './message.component.css'
 })
-export class MessageComponent implements OnDestroy{
+export class MessageComponent implements OnInit {
 
-  private messageService = inject(MessageService);
-  private authService = inject(AuthService);
+  private messageService  = inject(MessageService);
+  private authService     = inject(AuthService);
+  private customerService = inject(CustomerService);
+  private categoryService = inject(CategoryService);
+  router                  = inject(Router);
 
-  router = inject(Router);
+  messages: Message[]  = [];
+  filtered: Message[]  = [];
+  search    = '';
+  pageSize  = 10;
+  page      = 1;
+  error?:   string;
+  user?   = this.authService.getUser();
 
-  now = new Date();
-  messages$!: Observable<Message[]>;
-  error?: string;
-  user? = this.authService.getUser();
+  // Maps id → nom pour affichage
+  clientsMap:  Map<number, string> = new Map();
+  groupesMap:  Map<number, string> = new Map();
+
+  messageToDelete?: Message;
+  private deleteModal: any;
 
   constructor() {
     if (!this.user || this.user.id === undefined) {
-      alert('Vous devez être connecté pour accéder au dashboard');
-
+      alert('Vous devez être connecté');
       this.router.navigate(['/login']);
-      this.messages$ = new Observable(); // évite crash async
-      return;
     }
   }
 
-
   ngOnInit(): void {
-    console.log('INIT');
+    this.fetchClients();
+    this.fetchGroupes();
     this.fetchMessages();
   }
 
-
-  initDataTable() {
-    setTimeout(() => {
-      if (($.fn.DataTable as any).isDataTable('#myTable')) {
-        ($('#myTable') as any).DataTable().destroy();
-      }
-
-      $('#myTable').DataTable({
-        pageLength: 10,
-        lengthMenu: [5, 10, 20, 50],
-        language: {
-          search: "Rechercher:",
-          lengthMenu: "Afficher _MENU_ éléments",
-          info: "Affichage de _START_ à _END_ sur _TOTAL_ éléments",
-          /*paginate: {
-            next: "Suivant",
-            previous: "Précédent",
-            first: '',
-            last: ''
-          }*/
-        }
-      });
-    }, 0);
+  // Charge les clients de l'utilisateur pour résoudre les noms
+  fetchClients() {
+    if (!this.user?.id) return;
+    this.customerService.getUserMessages(this.user.id).pipe(
+      map((res: any) => res.data)
+    ).subscribe((clients: any[]) => {
+      this.clientsMap = new Map(clients.map(c => [c.id, c.name]));
+    });
   }
 
-  ngOnDestroy(): void {
-    if (($.fn.DataTable as any).isDataTable('#myTable')) {
-      ($('#myTable') as any).DataTable().destroy();
-    }
+  // Charge les groupes de l'utilisateur pour résoudre les noms
+  fetchGroupes() {
+    if (!this.user?.id) return;
+    this.categoryService.getUserCategories(this.user.id).pipe(
+      map((res: any) => res.data)
+    ).subscribe((groupes: any[]) => {
+      this.groupesMap = new Map(groupes.map(g => [g.id, g.libelle]));
+    });
   }
 
   fetchMessages() {
-    if (!this.user || this.user.id === undefined) {
-      this.error = 'Vous devez être connecté';
-      return;
-    }
-
-    this.messages$ = this.messageService.getUserMessages(this.user.id).pipe(
-      tap((res: any) => {
-        console.log('MESSAGES API:', res);
-
-        setTimeout(() => {
-          this.initDataTable();
-        }, 0);
-
-      }),
-      map((res: any) =>
-        res.data.map((m: any) => ({
-          ...m,
-          dateSend: new Date(m.dateSend) // ✅ conversion ici
-        }))
-      ),
-      catchError(err => {
-        this.error = 'Impossible de récupérer vos commandes';
-        console.error(err);
-        return throwError(() => err);
-      })
-    );
-    /*
-    this.messages$.subscribe(messages => {
-      console.log('MESSAGES:', messages);
-    });
-    */
+    if (!this.user?.id) return;
+    this.messageService.getUserMessages(this.user.id).pipe(
+      map((res: any) => res.data.map((m: any) => ({ ...m, dateSend: new Date(m.dateSend) }))),
+      catchError(err => { this.error = 'Erreur'; return throwError(() => err); })
+    ).subscribe(data => { this.messages = data; this.applyFilter(); });
   }
 
-
-  deleteMessage(id?: number) {
-
-    const confirmDelete = confirm(
-      'Voulez-vous vraiment supprimer ce message ?'
-    );
-
-    if (!confirmDelete || id === undefined) {
-      return;
+  // Retourne le nom du destinataire (client ou groupe)
+  getDestinataire(message: Message): string {
+    if (message.userId) {
+      return this.clientsMap.get(message.userId) ?? `Client #${message.userId}`;
     }
-
-    this.messageService.delete(id).subscribe({
-
-      next: (res) => {
-
-        console.log('Message supprimé', res);
-
-        // destroy DataTable avant refresh
-        if (($.fn.DataTable as any).isDataTable('#myTable')) {
-          ($('#myTable') as any).DataTable().destroy();
-        }
-
-        // refresh liste
-        this.fetchMessages();
-      },
-
-      error: (err) => {
-
-        console.error(err);
-
-        alert('Erreur lors de la suppression');
-      }
-
-    });
-
+    if (message.groupeId) {
+      return this.groupesMap.get(message.groupeId) ?? `Groupe #${message.groupeId}`;
+    }
+    return '-';
   }
 
+  applyFilter() {
+    const q = this.search.toLowerCase();
+    this.filtered = this.messages.filter(m =>
+      m.title?.toLowerCase().includes(q)
+    );
+    this.page = 1;
+  }
+
+  get paged() {
+    const start = (this.page - 1) * this.pageSize;
+    return this.filtered.slice(start, start + this.pageSize);
+  }
+
+  get totalPages() { return Math.ceil(this.filtered.length / this.pageSize); }
+
+  openDeleteModal(event: MouseEvent, message: Message) {
+    event.stopPropagation();
+    this.messageToDelete = message;
+    if (this.deleteModal) this.deleteModal.dispose();
+    this.deleteModal = new bootstrap.Modal(document.getElementById('deleteMessageModal'));
+    this.deleteModal.show();
+  }
+
+  confirmDelete() {
+    if (!this.messageToDelete?.id) return;
+    this.messageService.delete(this.messageToDelete.id).subscribe({
+      next: () => { this.deleteModal?.hide(); this.messageToDelete = undefined; this.fetchMessages(); },
+      error: err => console.error(err)
+    });
+  }
 }
