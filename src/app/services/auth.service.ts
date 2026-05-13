@@ -38,7 +38,7 @@ export class AuthService {
   register(data: InscriptionEntreprise | InscriptionPhysique): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}`, data).pipe(
       tap(res => {
-        console.log('Réponse d\'inscription', res);
+       // console.log('Réponse d\'inscription', res);
         // Sauvegarde du token dans localStorage
         //localStorage.setItem('authToken', res.token);
        // localStorage.setItem('user', JSON.stringify(res.user));

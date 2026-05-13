@@ -67,7 +67,7 @@ export class RegisterComponent {
         //telephone:this.formEntreprise.telephone,
       }
     }
-    console.log(data);
+    //console.log(data);
 
     this.registerService.register(data).pipe(
           finalize(() => {
@@ -131,7 +131,7 @@ export class RegisterComponent {
 
     }
 
-    console.log('Inscription fake générée ✔️');
+   // console.log('Inscription fake générée ✔️');
   }
 
   clearFakeAccounts() {
